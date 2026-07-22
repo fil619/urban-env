@@ -5,21 +5,24 @@
  */
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
+import { createPinia } from "pinia";
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 
 // Components
-import App from './App.vue'
+import App from "./App.vue";
 
 // Styles
-import 'unfonts.css'
-import './styles/tailwind.css'
-import './styles/main.scss'
+import "unfonts.css";
+import "./styles/tailwind.css";
+import "./styles/main.scss";
 
-const app = createApp(App)
+const pinia = createPinia();
+const app = createApp(App);
 
-registerPlugins(app)
+registerPlugins(app);
 
-app.mount('#app')
+app.use(pinia);
+app.mount("#app");

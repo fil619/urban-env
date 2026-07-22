@@ -2,6 +2,7 @@
   <v-app>
     <v-main>
       <HelloWorld />
+      Hello {{ store.name }}!
       <v-btn
         class="m-2"
         icon="mdi-theme-light-dark"
@@ -14,5 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-  import HelloWorld from '@/components/HelloWorld.vue'
+import HelloWorld from "@/components/HelloWorld.vue";
+import { useConfigStore } from "@/stores/configStore";
+
+const store = useConfigStore();
 </script>
