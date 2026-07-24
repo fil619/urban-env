@@ -1,21 +1,12 @@
 <template>
   <v-app>
     <v-main>
-      <HelloWorld />
-      Hello {{ store.name }}!
-      <v-btn
-        class="m-2"
-        icon="mdi-theme-light-dark"
-        location="top right"
-        position="absolute"
-        @click="$vuetify.theme.cycle()"
-      />
+      <RouterView />
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import HelloWorld from "@/components/HelloWorld.vue";
 import { useConfigStore } from "@/stores/configStore";
 
 const store = useConfigStore();
