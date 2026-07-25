@@ -4,10 +4,6 @@ import MainRoutes from "./MainRoutes";
 import PublicRoutes from "./PublicRoutes";
 
 export const router = createRouter({
-<<<<<<< Updated upstream
-  history: createMemoryHistory(),
-  routes,
-=======
   history: createWebHistory(),
   routes: [
     {
@@ -17,5 +13,4 @@ export const router = createRouter({
     MainRoutes,
     PublicRoutes,
   ],
->>>>>>> Stashed changes
 });
