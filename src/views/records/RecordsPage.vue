@@ -1,91 +1,28 @@
 <script setup lang="ts">
-import { ref, shallowRef } from "vue";
+import { ref } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 
-const records = shallowRef([
-  {
-    date: "20/12/2023",
-    businessUnit: "Retail Banking",
-    region: "North America",
-    revenue: "£1,245,000",
-    transactions: 1248,
-    status: "completed",
-  },
-  {
-    date: "21/12/2023",
-    businessUnit: "Corporate Banking",
-    region: "Europe",
-    revenue: "£987,500",
-    transactions: 856,
-    status: "processing",
-  },
-  {
-    date: "22/12/2023",
-    businessUnit: "Wealth Management",
-    region: "Asia Pacific",
-    revenue: "£2,134,750",
-    transactions: 432,
-    status: "completed",
-  },
-  {
-    date: "23/12/2023",
-    businessUnit: "Insurance",
-    region: "Latin America",
-    revenue: "£645,200",
-    transactions: 521,
-    status: "pending",
-  },
-  {
-    date: "24/12/2023",
-    businessUnit: "Investment Banking",
-    region: "Middle East",
-    revenue: "£3,560,000",
-    transactions: 187,
-    status: "completed",
-  },
-  {
-    date: "25/12/2023",
-    businessUnit: "Retail Banking",
-    region: "Africa",
-    revenue: "£423,800",
-    transactions: 674,
-    status: "processing",
-  },
-  {
-    date: "26/12/2023",
-    businessUnit: "Corporate Banking",
-    region: "North America",
-    revenue: "£1,789,900",
-    transactions: 938,
-    status: "completed",
-  },
-  {
-    date: "27/12/2023",
-    businessUnit: "Insurance",
-    region: "Europe",
-    revenue: "£712,450",
-    transactions: 603,
-    status: "pending",
-  },
-  {
-    date: "28/12/2023",
-    businessUnit: "Wealth Management",
-    region: "Asia Pacific",
-    revenue: "£1,365,700",
-    transactions: 351,
-    status: "completed",
-  },
-  {
-    date: "29/12/2023",
-    businessUnit: "Investment Banking",
-    region: "North America",
-    revenue: "£4,028,100",
-    transactions: 142,
-    status: "processing",
-  },
-]);
+interface RecordItem {
+  id: number;
+  date: string;
+  businessUnit: string;
+  region: string;
+  revenue: string;
+  transactions: number;
+  status: string;
+}
 
+interface DataTableOptions {
+  page: number;
+  itemsPerPage: number;
+  sortBy: { key: string; order?: boolean | "asc" | "desc" }[];
+  search: string;
+}
+
+const records = ref<RecordItem[]>([]);
+const totalRecords = ref(0);
+const loading = ref(false);
 const search = ref("");
 
 const headers = [
@@ -96,6 +33,32 @@ const headers = [
   { title: "Transactions", key: "transactions", align: "end" as const },
   { title: "Status", key: "status", sortable: false },
 ];
+
+async function loadItems(options: DataTableOptions) {
+  loading.value = true;
+
+  const params = new URLSearchParams({
+    page: String(options.page),
+    itemsPerPage: String(options.itemsPerPage),
+  });
+
+  if (options.search) {
+    params.set("search", options.search);
+  }
+
+  const sort = options.sortBy[0];
+  if (sort) {
+    params.set("sortBy", sort.key);
+    params.set("sortOrder", sort.order === "desc" ? "desc" : "asc");
+  }
+
+  const response = await fetch(`/api/records?${params.toString()}`);
+  const { items, total } = await response.json();
+
+  records.value = items;
+  totalRecords.value = total;
+  loading.value = false;
+}
 </script>
 
 <template>
@@ -112,14 +75,17 @@ const headers = [
         style="max-width: 320px"
       ></v-text-field>
     </div>
-    <v-data-table
+    <v-data-table-server
       class="bordered-table"
       :headers="headers"
       :items="records"
+      :items-length="totalRecords"
       :search="search"
-      :items-per-page="5"
+      :loading="loading"
+      :items-per-page="10"
       hover
       density="comfortable"
+      @update:options="loadItems"
     >
       <template v-slot:item.date="{ item }">
         <router-link to="/dashboard/default" class="text-secondary link-hover">
@@ -131,16 +97,7 @@ const headers = [
           variant="text"
           size="small"
           class="px-0"
-          v-if="item.status === 'rejected'"
-        >
-          <v-avatar size="8" color="error" variant="flat" class="mr-2"></v-avatar>
-          <p class="text-h6 mb-0">Processing</p>
-        </v-chip>
-        <v-chip
-          variant="text"
-          size="small"
-          class="px-0"
-          v-else-if="item.status === 'completed'"
+          v-if="item.status === 'completed'"
         >
           <v-avatar
             size="8"
@@ -149,6 +106,15 @@ const headers = [
             class="mr-2"
           ></v-avatar>
           <p class="text-h6 mb-0">Completed</p>
+        </v-chip>
+        <v-chip
+          variant="text"
+          size="small"
+          class="px-0"
+          v-else-if="item.status === 'processing'"
+        >
+          <v-avatar size="8" color="info" variant="flat" class="mr-2"></v-avatar>
+          <p class="text-h6 mb-0">Processing</p>
         </v-chip>
         <v-chip variant="text" size="small" class="px-0" v-else>
           <v-avatar
@@ -160,7 +126,7 @@ const headers = [
           <p class="text-h6 mb-0">Pending</p>
         </v-chip>
       </template>
-    </v-data-table>
+    </v-data-table-server>
   </UiTitleCard>
 </template>
 
