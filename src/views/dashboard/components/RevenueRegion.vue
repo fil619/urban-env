@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted, shallowRef } from "vue";
 import { useTheme } from "vuetify";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 
@@ -56,15 +56,15 @@ const chartOptions1 = computed(() => {
   };
 });
 
-// chart 1
-const barChart1 = {
-  series: [
-    {
-      name: "series-1",
-      data: [80, 95, 70, 42, 65, 55, 78],
-    },
-  ],
-};
+const barChart1 = shallowRef({
+  series: [{ name: "series-1", data: [] as number[] }],
+});
+
+onMounted(async () => {
+  const response = await fetch("/api/dashboard/revenue-by-region");
+  const { data } = await response.json();
+  barChart1.value = { series: [{ name: "series-1", data }] };
+});
 </script>
 
 <template>

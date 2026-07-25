@@ -1,7 +1,23 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref, shallowRef } from "vue";
+
+interface NotificationItem {
+  id: number;
+  title: string;
+  message: string;
+  time: string;
+  icon: string;
+  color: string;
+  avatar: string;
+}
 
 const isActive = ref(true);
+const notifications = shallowRef<NotificationItem[]>([]);
+
+onMounted(async () => {
+  const response = await fetch("/api/notifications");
+  notifications.value = await response.json();
+});
 
 function deactivateItem() {
   isActive.value = false;
@@ -20,7 +36,7 @@ function deactivateItem() {
         v-bind="props"
       >
         <v-badge
-          :content="isActive ? '2' : '0'"
+          :content="isActive ? notifications.length : 0"
           color="primary"
           offset-x="-4"
           offset-y="-5"
@@ -70,118 +86,43 @@ function deactivateItem() {
           aria-label="notification list"
           aria-busy="true"
         >
-          <v-list-item
-            value="1"
-            color="secondary"
-            class="no-spacer py-1"
-            :active="isActive"
+          <template
+            v-for="(notification, i) in notifications"
+            :key="notification.id"
           >
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightsuccess"
-                class="mr-3 py-2 text-success"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-cake-variant"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                It's
-                <span style="font-weight: 600">Cristina danny's</span> birthday
-                today.
-              </h6>
-              <span class="text-caption">3:00 AM</span>
-            </div>
+            <v-list-item
+              :value="notification.id"
+              color="secondary"
+              class="no-spacer py-1"
+              :active="isActive"
+            >
+              <template v-slot:prepend>
+                <v-avatar
+                  size="36"
+                  variant="flat"
+                  :color="notification.avatar"
+                  :class="`mr-3 py-2 text-${notification.color}`"
+                >
+                  <v-icon
+                    color="blue-darken-2"
+                    :icon="notification.icon"
+                    size="large"
+                  ></v-icon>
+                </v-avatar>
+              </template>
+              <div class="d-inline-flex justify-space-between w-100">
+                <h6 class="text-subtitle-1 font-weight-regular mb-0">
+                  {{ notification.title }}
+                </h6>
+                <span class="text-caption">{{ notification.time }}</span>
+              </div>
 
-            <p class="text-caption text-medium-emphasis my-0">2 min ago</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item value="2" color="secondary" class="no-spacer">
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightprimary"
-                class="mr-3 py-2 text-primary"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-message-outline"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                <span style="font-weight: 600">Aida Burg</span> commented your
-                post.
-              </h6>
-              <span class="text-caption">6:00 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">5 August</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item
-            value="3"
-            color="secondary"
-            class="no-spacer"
-            :active="isActive"
-          >
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lighterror"
-                class="mr-3 py-2 text-error"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-cog-outline"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                Your Profile is Complete
-                <span style="font-weight: 600">60%</span>
-              </h6>
-              <span class="text-caption">2:45 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">7 hours ago</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item value="4" color="secondary" class="no-spacer">
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightprimary"
-                class="mr-3 py-2 text-primary"
-              >
-                C
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                <span style="font-weight: 600">Cristina Danny</span> invited to
-                join <span style="font-weight: 600">Metting.</span>
-              </h6>
-              <span class="text-caption">9:10 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">
-              Daily scrum meeting time
-            </p>
-          </v-list-item>
+              <p class="text-caption text-medium-emphasis my-0">
+                {{ notification.message }}
+              </p>
+            </v-list-item>
+            <v-divider v-if="i < notifications.length - 1"></v-divider>
+          </template>
         </v-list>
       </div>
       <v-divider></v-divider>
