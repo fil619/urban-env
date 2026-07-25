@@ -22,11 +22,18 @@ const selectedStatus = ref<string | null>(null);
         :selected-status="selectedStatus"
       />
     </div>
-    <WidgetFive />
-    <div class="flex flex-col md:flex-row gap-4 mt-4">
+
+    <v-card class="title-card" variant="text">
+      <v-card-item class="pb-2 px-0 pt-0">
+        <v-card-title class="text-h5">Performance Overview</v-card-title>
+      </v-card-item>
+      <WidgetFive />
+    </v-card>
+
+    <div class="flex flex-col md:flex-row gap-4 mt-5">
       <RevenueTrend />
       <RevenueRegion />
     </div>
-    <RecentOrder />
+    <RecentOrder class="mt-5" />
   </div>
 </template>

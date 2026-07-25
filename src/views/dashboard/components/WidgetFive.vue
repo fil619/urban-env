@@ -36,6 +36,7 @@ const fivecards = shallowRef([
   },
 ]);
 </script>
+
 <template>
   <v-row class="my-0">
     <v-col
@@ -47,8 +48,8 @@ const fivecards = shallowRef([
       :value="card5"
     >
       <v-card elevation="0">
-        <v-card variant="outlined">
-          <v-card-text>
+        <v-card variant="text">
+          <v-card-text class="rounded-md">
             <div class="d-flex align-items-center justify-space-between">
               <div>
                 <h6 class="text-h6 text-lightText mb-1">{{ card5.name }}</h6>
