@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import HomeView from "@/components/HomeView.vue";
-
-const routes = [{ path: "/", component: HomeView }];
+import MainRoutes from "./MainRoutes";
+import PublicRoutes from "./PublicRoutes";
 
 export const router = createRouter({
 <<<<<<< Updated upstream
