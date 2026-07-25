@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <side-bar />
+    <header-bar />
 
     <v-main class="page-wrapper">
       <v-container class="h-full flex items-center" max-width="900">
@@ -75,6 +76,7 @@
 
 <script setup lang="ts">
 import SideBar from "@/components/navigation/SideBar.vue";
+import HeaderBar from "@/components/header/HeaderBar.vue";
 
 const links = [
   {
