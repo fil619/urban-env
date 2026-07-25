@@ -10,7 +10,7 @@ const chartOptions1 = computed(() => {
   return {
     chart: {
       type: "area",
-      height: 450,
+      height: 400,
       fontFamily: `inherit`,
       foreColor: "rgba(var(--v-theme-secondary), var(--v-high-opacity))",
       toolbar: false,
@@ -129,7 +129,7 @@ const tab = ref(1);
     <v-card-text class="rounded-md overflow-hidden">
       <apexchart
         type="area"
-        height="450"
+        height="400"
         :options="chartOptions1"
         :series="areaChart1.series"
       >

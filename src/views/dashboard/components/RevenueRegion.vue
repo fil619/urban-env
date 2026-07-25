@@ -10,7 +10,7 @@ const chartOptions1 = computed(() => {
   return {
     chart: {
       type: "bar",
-      height: 100,
+      height: 400,
       fontFamily: `inherit`,
       foreColor: "#a1aab2",
       toolbar: {
@@ -74,7 +74,7 @@ const barChart1 = {
   >
     <apexchart
       type="bar"
-      height="365"
+      height="400"
       :options="chartOptions1"
       :series="barChart1.series"
     >
