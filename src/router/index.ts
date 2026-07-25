@@ -1,10 +1,16 @@
 import { createMemoryHistory, createRouter } from "vue-router";
 
-import HomeView from "@/components/HomeView.vue";
-
-const routes = [{ path: "/", component: HomeView }];
+import MainRoutes from "./MainRoutes";
+import PublicRoutes from "./PublicRoutes";
 
 export const router = createRouter({
   history: createMemoryHistory(),
-  routes,
+  routes: [
+    {
+      path: "/:pathMatch(.*)*",
+      component: () => import("@/views/error/Error404Page.vue"),
+    },
+    MainRoutes,
+    PublicRoutes,
+  ],
 });
