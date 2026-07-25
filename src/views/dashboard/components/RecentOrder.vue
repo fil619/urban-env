@@ -3,76 +3,86 @@ import { shallowRef } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 
-const projects = shallowRef([
+const records = shallowRef([
   {
-    number: 13256498,
-    order: 125,
-    name: "Keyboard",
-    amount: "$70,999",
-    priority: "rejected",
+    date: "20/12/2023",
+    businessUnit: "Retail Banking",
+    region: "North America",
+    revenue: "£1,245,000",
+    transactions: 1248,
+    status: "completed",
   },
   {
-    number: 13286564,
-    order: 100,
-    name: "Computer Accessories",
-    amount: "$83,348",
-    priority: "approved",
+    date: "21/12/2023",
+    businessUnit: "Corporate Banking",
+    region: "Europe",
+    revenue: "£987,500",
+    transactions: 856,
+    status: "processing",
   },
   {
-    number: 84564564,
-    order: 40,
-    name: "Camera Lens",
-    amount: "$40,570",
-    priority: "rejected",
+    date: "22/12/2023",
+    businessUnit: "Wealth Management",
+    region: "Asia Pacific",
+    revenue: "£2,134,750",
+    transactions: 432,
+    status: "completed",
   },
   {
-    number: 86739658,
-    order: 99,
-    name: "TV",
-    amount: "$410,780",
-    priority: "pending",
+    date: "23/12/2023",
+    businessUnit: "Insurance",
+    region: "Latin America",
+    revenue: "£645,200",
+    transactions: 521,
+    status: "pending",
   },
   {
-    number: 98652366,
-    order: 50,
-    name: "Handset",
-    amount: "$10,239",
-    priority: "approved",
+    date: "24/12/2023",
+    businessUnit: "Investment Banking",
+    region: "Middle East",
+    revenue: "£3,560,000",
+    transactions: 187,
+    status: "completed",
   },
   {
-    number: 98753263,
-    order: 89,
-    name: "Mouse",
-    amount: "$10,570",
-    priority: "rejected",
+    date: "25/12/2023",
+    businessUnit: "Retail Banking",
+    region: "Africa",
+    revenue: "£423,800",
+    transactions: 674,
+    status: "processing",
   },
   {
-    number: 98753275,
-    order: 185,
-    name: "Desktop",
-    amount: "$98,063",
-    priority: "approved",
+    date: "26/12/2023",
+    businessUnit: "Corporate Banking",
+    region: "North America",
+    revenue: "£1,789,900",
+    transactions: 938,
+    status: "completed",
   },
   {
-    number: 98753291,
-    order: 100,
-    name: "Chair",
-    amount: "$14,001",
-    priority: "pending",
+    date: "27/12/2023",
+    businessUnit: "Insurance",
+    region: "Europe",
+    revenue: "£712,450",
+    transactions: 603,
+    status: "pending",
   },
   {
-    number: 98756325,
-    order: 355,
-    name: "Mobile",
-    amount: "$90,989",
-    priority: "approved",
+    date: "28/12/2023",
+    businessUnit: "Wealth Management",
+    region: "Asia Pacific",
+    revenue: "£1,365,700",
+    transactions: 351,
+    status: "completed",
   },
   {
-    number: 98764564,
-    order: 300,
-    name: "Laptop",
-    amount: "$180,139",
-    priority: "pending",
+    date: "29/12/2023",
+    businessUnit: "Investment Banking",
+    region: "North America",
+    revenue: "£4,028,100",
+    transactions: 142,
+    status: "processing",
   },
 ]);
 </script>
@@ -83,44 +93,51 @@ const projects = shallowRef([
       <thead class="bg-containerBg">
         <tr>
           <th class="text-left text-caption font-weight-bold text-uppercase">
-            Tracking no.
+            Date
           </th>
           <th class="text-left text-caption font-weight-bold text-uppercase">
-            Product name
+            Business Unit
           </th>
           <th
-            class="text-right text-caption font-weight-bold text-uppercase"
+            class="text-left text-caption font-weight-bold text-uppercase"
             style="min-width: 100px"
           >
-            Total order
+            Region
+          </th>
+          <th class="text-right text-caption font-weight-bold text-uppercase">
+            Revenue
+          </th>
+          <th class="text-right text-caption font-weight-bold text-uppercase">
+            Transactions
           </th>
           <th class="text-left text-caption font-weight-bold text-uppercase">
             Status
           </th>
-          <th class="text-right text-caption font-weight-bold text-uppercase">
-            Total amount
-          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in projects" :key="item.name">
+        <tr v-for="item in records" :key="item.date">
           <td class="py-3">
             <router-link
               to="/dashboard/default"
               class="text-secondary link-hover"
-              >{{ item.number }}</router-link
+              >{{ item.date }}</router-link
             >
           </td>
-          <td class="py-3">{{ item.name }}</td>
+          <td class="py-3">{{ item.businessUnit }}</td>
+          <td class="py-3">{{ item.region }}</td>
           <td class="py-3 text-right" style="min-width: 100px">
-            {{ item.order }}
+            {{ item.revenue }}
+          </td>
+          <td class="py-3 text-right" style="min-width: 100px">
+            {{ item.transactions }}
           </td>
           <td class="py-3">
             <v-chip
               variant="text"
               size="small"
               class="px-0"
-              v-if="item.priority === 'rejected'"
+              v-if="item.status === 'rejected'"
             >
               <v-avatar
                 size="8"
@@ -128,13 +145,13 @@ const projects = shallowRef([
                 variant="flat"
                 class="mr-2"
               ></v-avatar>
-              <p class="text-h6 mb-0">Rejected</p>
+              <p class="text-h6 mb-0">Processing</p>
             </v-chip>
             <v-chip
               variant="text"
               size="small"
               class="px-0"
-              v-else-if="item.priority === 'approved'"
+              v-else-if="item.status === 'completed'"
             >
               <v-avatar
                 size="8"
@@ -142,7 +159,7 @@ const projects = shallowRef([
                 variant="flat"
                 class="mr-2"
               ></v-avatar>
-              <p class="text-h6 mb-0">Approved</p>
+              <p class="text-h6 mb-0">Completed</p>
             </v-chip>
             <v-chip variant="text" size="small" class="px-0" v-else>
               <v-avatar
@@ -153,9 +170,6 @@ const projects = shallowRef([
               ></v-avatar>
               <p class="text-h6 mb-0">Pending</p>
             </v-chip>
-          </td>
-          <td class="py-3 text-right" style="min-width: 100px">
-            {{ item.amount }}
           </td>
         </tr>
       </tbody>

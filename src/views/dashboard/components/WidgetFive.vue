@@ -3,7 +3,7 @@ import { shallowRef } from "vue";
 
 const fivecards = shallowRef([
   {
-    name: "Total Page Views",
+    name: "Revenue",
     earn: "4,42,236",
     percent: "59.3%",
     color: "primary",
@@ -11,7 +11,7 @@ const fivecards = shallowRef([
     text: "35,000",
   },
   {
-    name: "Total Users",
+    name: "Active Customers",
     earn: "78,250",
     percent: "70.5%",
     color: "success",
@@ -19,7 +19,7 @@ const fivecards = shallowRef([
     text: "8,900",
   },
   {
-    name: "Total Order",
+    name: "Transactions",
     earn: "18,800",
     percent: "27.4%",
     color: "warning",
@@ -27,7 +27,7 @@ const fivecards = shallowRef([
     text: "1,943",
   },
   {
-    name: "Total Sales",
+    name: "Conversion Rate",
     earn: "$35,078",
     percent: "27.4%",
     color: "error",

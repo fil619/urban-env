@@ -113,12 +113,8 @@ const chartOptions2 = computed(() => {
 const areaChart1 = {
   series: [
     {
-      name: "Page Views",
+      name: "Revenue",
       data: [31, 40, 28, 51, 42, 109, 100],
-    },
-    {
-      name: "Sessions",
-      data: [11, 32, 45, 32, 34, 52, 41],
     },
   ],
 };
@@ -126,12 +122,8 @@ const areaChart1 = {
 const areaChart2 = {
   series: [
     {
-      name: "Page Views",
+      name: "Revenue",
       data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 86, 115, 35],
-    },
-    {
-      name: "Sessions",
-      data: [110, 60, 150, 35, 60, 36, 26, 45, 65, 52, 53, 41],
     },
   ],
 };
@@ -143,7 +135,7 @@ const tab = ref(1);
   <v-card class="title-card" variant="text">
     <v-card-item class="pb-2 px-0 pt-0">
       <div class="d-flex align-center justify-space-between">
-        <v-card-title class="text-h5">Unique Visitor</v-card-title>
+        <v-card-title class="text-h5">Revenue</v-card-title>
         <div class="d-flex flex-wrap">
           <v-tabs
             v-model="tab"
