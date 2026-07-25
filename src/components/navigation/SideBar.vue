@@ -16,6 +16,11 @@ const sidebarItem: MenuItem[] = [
     icon: "mdi-view-dashboard-outline",
     to: "/",
   },
+  {
+    title: "Records",
+    icon: "mdi-file-chart-outline",
+    to: "/records",
+  },
 ];
 </script>
 
