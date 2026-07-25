@@ -1,0 +1,9 @@
+.v-toolbar {
+  &.v-app-bar {
+    border-bottom: 1px solid rgba(var(--v-theme-borderLight), 0.8);
+  }
+}
+
+.page-wrapper {
+  background: rgb(var(--v-theme-containerBg));
+}
