@@ -40,49 +40,6 @@ const customizer = useConfigStore();
         size="large"
       ></v-icon>
     </v-btn>
-    <v-menu
-      :close-on-content-click="false"
-      class="hidden-lg-and-up"
-      offset="10, 0"
-    >
-      <template v-slot:activator="{ props }">
-        <v-btn
-          class="hidden-lg-and-up text-secondary ml-1"
-          color="lightsecondary"
-          icon
-          rounded="sm"
-          variant="flat"
-          size="small"
-          v-bind="props"
-        >
-          <v-icon
-            color="blue-darken-2"
-            icon="mdi-magnify"
-            size="large"
-          ></v-icon>
-        </v-btn>
-      </template>
-      <v-sheet class="search-sheet v-col-12 pa-0" width="320">
-        <v-text-field
-          persistent-placeholder
-          placeholder="Search here.."
-          color="primary"
-          variant="solo"
-          hide-details
-        >
-          <template v-slot:prepend-inner>
-            <v-icon
-              color="blue-darken-2"
-              icon="mdi-magnify"
-              size="small"
-            ></v-icon>
-          </template>
-        </v-text-field>
-      </v-sheet>
-    </v-menu>
-    <v-sheet class="d-none d-lg-block" width="250">
-      <search-bar />
-    </v-sheet>
     <v-spacer />
     <notification-d-d />
   </v-app-bar>

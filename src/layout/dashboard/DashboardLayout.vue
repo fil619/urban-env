@@ -3,7 +3,7 @@
     <side-bar />
     <header-bar />
 
-    <v-main class="page-wrapper">
+    <v-main class="page-wrapper" scrollable>
       <v-container fluid>
         <router-view />
       </v-container>
