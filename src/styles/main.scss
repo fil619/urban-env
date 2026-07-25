@@ -1,6 +1,8 @@
 @use "./override";
 @use "./sidebar";
 
+@use "./components/VCard";
+
 @layer vuetify-overrides {
   code,
   pre,
