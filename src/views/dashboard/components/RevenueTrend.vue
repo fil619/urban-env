@@ -109,21 +109,11 @@ const chartOptions2 = computed(() => {
   };
 });
 
-// chart 1
 const areaChart1 = {
   series: [
     {
       name: "Revenue",
       data: [31, 40, 28, 51, 42, 109, 100],
-    },
-  ],
-};
-
-const areaChart2 = {
-  series: [
-    {
-      name: "Revenue",
-      data: [76, 85, 101, 98, 87, 105, 91, 114, 94, 86, 115, 35],
     },
   ],
 };
@@ -134,46 +124,16 @@ const tab = ref(1);
 <template>
   <v-card class="title-card" variant="text">
     <v-card-item class="pb-2 px-0 pt-0">
-      <div class="d-flex align-center justify-space-between">
-        <v-card-title class="text-h5">Revenue</v-card-title>
-        <div class="d-flex flex-wrap">
-          <v-tabs
-            v-model="tab"
-            color="primary"
-            class="tabBtn"
-            density="compact"
-            hide-slider
-          >
-            <v-tab value="one" class="mr-1" variant="outlined" rounded="md">
-              Month
-            </v-tab>
-            <v-tab value="two" variant="outlined" rounded="md"> Week </v-tab>
-          </v-tabs>
-        </div>
-      </div>
+      <v-card-title class="text-h5">Revenue Trend</v-card-title>
     </v-card-item>
     <v-card-text class="rounded-md overflow-hidden">
-      <v-window v-model="tab">
-        <v-window-item value="one">
-          <apexchart
-            type="area"
-            height="450"
-            :options="chartOptions2"
-            :series="areaChart2.series"
-          >
-          </apexchart>
-        </v-window-item>
-
-        <v-window-item value="two">
-          <apexchart
-            type="area"
-            height="450"
-            :options="chartOptions1"
-            :series="areaChart1.series"
-          >
-          </apexchart>
-        </v-window-item>
-      </v-window>
+      <apexchart
+        type="area"
+        height="450"
+        :options="chartOptions1"
+        :series="areaChart1.series"
+      >
+      </apexchart>
     </v-card-text>
   </v-card>
 </template>

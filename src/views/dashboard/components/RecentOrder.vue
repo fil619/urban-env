@@ -88,7 +88,7 @@ const records = shallowRef([
 </script>
 
 <template>
-  <UiTitleCard title="Recent Orders" class-name="px-0 pb-0 rounded-md">
+  <UiTitleCard title="Recent Transactions" class-name="px-0 pb-0 rounded-md">
     <v-table class="bordered-table" hover density="comfortable">
       <thead class="bg-containerBg">
         <tr>

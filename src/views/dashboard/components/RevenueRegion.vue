@@ -69,12 +69,9 @@ const barChart1 = {
 
 <template>
   <UiTitleCard
-    title="Revenue Overview"
+    title="Revenue by Region"
     class-name="pt-5 px-0 rounded-md overflow-hidden"
   >
-    <div class="px-5">
-      <h6 class="text-h6 text-lightText mb-4">by Region</h6>
-    </div>
     <apexchart
       type="bar"
       height="365"
