@@ -1,13 +1,11 @@
+<script lang="ts" setup>
+import { RouterView } from "vue-router";
+</script>
+
 <template>
   <v-app>
     <v-main>
-      <RouterView />
+      <router-view />
     </v-main>
   </v-app>
 </template>
-
-<script lang="ts" setup>
-import { useConfigStore } from "@/stores/configStore";
-
-const store = useConfigStore();
-</script>
