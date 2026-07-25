@@ -4,7 +4,7 @@
     <header-bar />
 
     <v-main class="page-wrapper">
-      <v-container class="h-full flex items-center" max-width="900">
+      <v-container fluid>
         <router-view />
       </v-container>
     </v-main>

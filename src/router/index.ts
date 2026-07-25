@@ -1,10 +1,10 @@
-import { createMemoryHistory, createRouter } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 
 import MainRoutes from "./MainRoutes";
 import PublicRoutes from "./PublicRoutes";
 
 export const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
   routes: [
     {
       path: "/:pathMatch(.*)*",

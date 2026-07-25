@@ -14,6 +14,7 @@ import { registerPlugins } from "@/plugins";
 
 // Components
 import App from "./App.vue";
+import VueApexCharts from "vue3-apexcharts";
 
 // Styles
 import "unfonts.css";
@@ -27,4 +28,5 @@ registerPlugins(app);
 
 app.use(pinia);
 app.use(router);
+app.use(VueApexCharts);
 app.mount("#app");
