@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { shallowRef } from "vue";
+import { RouterLink } from "vue-router";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 
@@ -89,6 +90,11 @@ const records = shallowRef([
 
 <template>
   <UiTitleCard title="Recent Transactions" class-name="px-0 pb-0 rounded-md">
+    <template v-slot:action>
+      <RouterLink to="/records" class="text-caption text-primary link-hover">
+        Show More
+      </RouterLink>
+    </template>
     <v-table class="bordered-table" hover density="comfortable">
       <thead class="bg-containerBg">
         <tr>

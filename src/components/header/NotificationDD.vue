@@ -1,7 +1,78 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, shallowRef } from "vue";
+
+interface NotificationMessagePart {
+  text: string;
+  bold?: boolean;
+}
+
+interface NotificationItem {
+  icon?: string;
+  avatarLabel?: string;
+  avatarColor: string;
+  iconColor: string;
+  message: NotificationMessagePart[];
+  time: string;
+  subtitle: string;
+  unread: boolean;
+}
 
 const isActive = ref(true);
+
+const notifications = shallowRef<NotificationItem[]>([
+  {
+    icon: "mdi-cash-check",
+    avatarColor: "lightsuccess",
+    iconColor: "success",
+    message: [
+      { text: "Revenue " },
+      { text: "target achieved", bold: true },
+      { text: " for this month." },
+    ],
+    time: "9:15 AM",
+    subtitle: "2 min ago",
+    unread: true,
+  },
+  {
+    icon: "mdi-swap-horizontal-bold",
+    avatarColor: "lightprimary",
+    iconColor: "primary",
+    message: [
+      { text: "Transaction volume " },
+      { text: "increased", bold: true },
+      { text: " in North America." },
+    ],
+    time: "8:42 AM",
+    subtitle: "15 min ago",
+    unread: false,
+  },
+  {
+    icon: "mdi-chart-line-variant",
+    avatarColor: "lighterror",
+    iconColor: "error",
+    message: [
+      { text: "Conversion rate dropped " },
+      { text: "below target", bold: true },
+      { text: " threshold." },
+    ],
+    time: "7:58 AM",
+    subtitle: "1 hour ago",
+    unread: true,
+  },
+  {
+    icon: "mdi-database-sync",
+    avatarColor: "lightprimary",
+    iconColor: "primary",
+    message: [
+      { text: "Operational data " },
+      { text: "successfully", bold: true },
+      { text: " synchronized." },
+    ],
+    time: "7:30 AM",
+    subtitle: "Daily data refresh",
+    unread: false,
+  },
+]);
 
 function deactivateItem() {
   isActive.value = false;
@@ -70,118 +141,53 @@ function deactivateItem() {
           aria-label="notification list"
           aria-busy="true"
         >
-          <v-list-item
-            value="1"
-            color="secondary"
-            class="no-spacer py-1"
-            :active="isActive"
+          <template
+            v-for="(notification, i) in notifications"
+            :key="notification.time"
           >
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightsuccess"
-                class="mr-3 py-2 text-success"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-cake-variant"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                It's
-                <span style="font-weight: 600">Cristina danny's</span> birthday
-                today.
-              </h6>
-              <span class="text-caption">3:00 AM</span>
-            </div>
+            <v-list-item
+              :value="i + 1"
+              color="secondary"
+              class="no-spacer py-1"
+              :active="notification.unread && isActive"
+            >
+              <template v-slot:prepend>
+                <v-avatar
+                  size="36"
+                  variant="flat"
+                  :color="notification.avatarColor"
+                  :class="`mr-3 py-2 text-${notification.iconColor}`"
+                >
+                  <v-icon
+                    v-if="notification.icon"
+                    color="blue-darken-2"
+                    :icon="notification.icon"
+                    size="large"
+                  ></v-icon>
+                  <template v-else>{{ notification.avatarLabel }}</template>
+                </v-avatar>
+              </template>
+              <div class="d-inline-flex justify-space-between w-100">
+                <h6 class="text-subtitle-1 font-weight-regular mb-0">
+                  <template
+                    v-for="(part, pi) in notification.message"
+                    :key="pi"
+                  >
+                    <span v-if="part.bold" style="font-weight: 600">{{
+                      part.text
+                    }}</span>
+                    <template v-else>{{ part.text }}</template>
+                  </template>
+                </h6>
+                <span class="text-caption">{{ notification.time }}</span>
+              </div>
 
-            <p class="text-caption text-medium-emphasis my-0">2 min ago</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item value="2" color="secondary" class="no-spacer">
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightprimary"
-                class="mr-3 py-2 text-primary"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-message-outline"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                <span style="font-weight: 600">Aida Burg</span> commented your
-                post.
-              </h6>
-              <span class="text-caption">6:00 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">5 August</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item
-            value="3"
-            color="secondary"
-            class="no-spacer"
-            :active="isActive"
-          >
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lighterror"
-                class="mr-3 py-2 text-error"
-              >
-                <v-icon
-                  color="blue-darken-2"
-                  icon="mdi-cog-outline"
-                  size="large"
-                ></v-icon>
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                Your Profile is Complete
-                <span style="font-weight: 600">60%</span>
-              </h6>
-              <span class="text-caption">2:45 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">7 hours ago</p>
-          </v-list-item>
-          <v-divider></v-divider>
-          <v-list-item value="4" color="secondary" class="no-spacer">
-            <template v-slot:prepend>
-              <v-avatar
-                size="36"
-                variant="flat"
-                color="lightprimary"
-                class="mr-3 py-2 text-primary"
-              >
-                C
-              </v-avatar>
-            </template>
-            <div class="d-inline-flex justify-space-between w-100">
-              <h6 class="text-subtitle-1 font-weight-regular mb-0">
-                <span style="font-weight: 600">Cristina Danny</span> invited to
-                join <span style="font-weight: 600">Metting.</span>
-              </h6>
-              <span class="text-caption">9:10 PM</span>
-            </div>
-
-            <p class="text-caption text-medium-emphasis my-0">
-              Daily scrum meeting time
-            </p>
-          </v-list-item>
+              <p class="text-caption text-medium-emphasis my-0">
+                {{ notification.subtitle }}
+              </p>
+            </v-list-item>
+            <v-divider v-if="i < notifications.length - 1"></v-divider>
+          </template>
         </v-list>
       </div>
       <v-divider></v-divider>
