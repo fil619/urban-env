@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, shallowRef } from "vue";
 import { useTheme } from "vuetify";
 
 const theme = useTheme();
@@ -109,14 +109,15 @@ const chartOptions2 = computed(() => {
   };
 });
 
-const areaChart1 = {
-  series: [
-    {
-      name: "Revenue",
-      data: [31, 40, 28, 51, 42, 109, 100],
-    },
-  ],
-};
+const areaChart1 = shallowRef({
+  series: [{ name: "Revenue", data: [] as number[] }],
+});
+
+onMounted(async () => {
+  const response = await fetch("/api/dashboard/revenue-trend");
+  const { data } = await response.json();
+  areaChart1.value = { series: [{ name: "Revenue", data }] };
+});
 
 const tab = ref(1);
 </script>

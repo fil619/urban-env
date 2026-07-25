@@ -1,40 +1,21 @@
 <script setup lang="ts">
-import { shallowRef } from "vue";
+import { onMounted, shallowRef } from "vue";
 
-const fivecards = shallowRef([
-  {
-    name: "Revenue",
-    earn: "4,42,236",
-    percent: "59.3%",
-    color: "primary",
-    icon: "mdi-trending-up",
-    text: "35,000",
-  },
-  {
-    name: "Active Customers",
-    earn: "78,250",
-    percent: "70.5%",
-    color: "success",
-    icon: "mdi-trending-up",
-    text: "8,900",
-  },
-  {
-    name: "Transactions",
-    earn: "18,800",
-    percent: "27.4%",
-    color: "warning",
-    icon: "mdi-trending-down",
-    text: "1,943",
-  },
-  {
-    name: "Conversion Rate",
-    earn: "$35,078",
-    percent: "27.4%",
-    color: "error",
-    icon: "mdi-trending-down",
-    text: "$20,395",
-  },
-]);
+interface KpiCard {
+  name: string;
+  earn: string;
+  percent: string;
+  color: string;
+  icon: string;
+  text: string;
+}
+
+const fivecards = shallowRef<KpiCard[]>([]);
+
+onMounted(async () => {
+  const response = await fetch("/api/dashboard/kpis");
+  fivecards.value = await response.json();
+});
 </script>
 
 <template>
