@@ -13,7 +13,7 @@ function deactivateItem() {
     <template v-slot:activator="{ props }">
       <v-btn
         icon
-        class="text-secondary ml-sm-2 ml-1"
+        class="text-secondary ml-sm-2 ml-1 mr-3"
         color="darkText"
         rounded="sm"
         size="small"
