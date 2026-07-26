@@ -32,10 +32,55 @@ const kpis = [
   },
 ];
 
-const revenueTrend = [31, 40, 28, 51, 42, 109, 100];
+const MONTH_NAMES = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const DATA_START_MONTH = new Date(2026, 0, 1);
+const DATA_END_MONTH = new Date(2026, 11, 1);
 
 function parseRevenue(revenue: string) {
   return Number(revenue.replace(/[£,]/g, ""));
+}
+
+function monthLabel(date: Date) {
+  return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+function getMonthRange(url: URL) {
+  const fromDate = url.searchParams.get("fromDate");
+  const toDate = url.searchParams.get("toDate");
+
+  const start = fromDate
+    ? new Date(
+        new Date(fromDate).getFullYear(),
+        new Date(fromDate).getMonth(),
+        1,
+      )
+    : DATA_START_MONTH;
+  const end = toDate
+    ? new Date(new Date(toDate).getFullYear(), new Date(toDate).getMonth(), 1)
+    : DATA_END_MONTH;
+
+  const months = [];
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    months.push(new Date(cursor));
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
+
+  return months;
 }
 
 const notifications = [
@@ -115,9 +160,27 @@ function applyRecordFilters(url: URL) {
 
 export const handlers = [
   http.get("/api/dashboard/kpis", () => HttpResponse.json(kpis)),
-  http.get("/api/dashboard/revenue-trend", () =>
-    HttpResponse.json({ data: revenueTrend }),
-  ),
+  http.get("/api/dashboard/revenue-trend", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+    const months = getMonthRange(url);
+
+    const data = months.map((month) =>
+      Math.round(
+        filtered
+          .filter((record) => {
+            const recordDate = parseGbDate(record.date);
+            return (
+              recordDate.getFullYear() === month.getFullYear() &&
+              recordDate.getMonth() === month.getMonth()
+            );
+          })
+          .reduce((sum, record) => sum + parseRevenue(record.revenue), 0),
+      ),
+    );
+
+    return HttpResponse.json({ labels: months.map(monthLabel), data });
+  }),
   http.get("/api/dashboard/revenue-by-region", ({ request }) => {
     const url = new URL(request.url);
     const filtered = applyRecordFilters(url);

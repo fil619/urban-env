@@ -25,16 +25,19 @@ function randomDateBetween(start: Date, end: Date) {
 
 function generateRecords(count = 300) {
   return Array.from({ length: count }, (_, index) => {
-    const date = randomDateBetween(new Date(2024, 0, 1), new Date(2026, 11, 31));
+    const date = randomDateBetween(
+      new Date(2026, 0, 1),
+      new Date(2026, 11, 31),
+    );
 
     return {
       id: index + 1,
       date: date.toLocaleDateString("en-GB"),
       businessUnit: businessUnits[index % businessUnits.length].name,
       region: regions[index % regions.length].name,
-      revenue: `£${(
-        Math.floor(Math.random() * 4000000) + 100000
-      ).toLocaleString("en-GB")}`,
+      revenue: `£${(Math.floor(Math.random() * 49000) + 1000).toLocaleString(
+        "en-GB",
+      )}`,
       transactions: Math.floor(Math.random() * 1500) + 100,
       status: statuses[index % statuses.length],
     };

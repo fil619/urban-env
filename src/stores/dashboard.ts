@@ -30,6 +30,7 @@ interface RecentRecordsFilters {
 export const useDashboardStore = defineStore("dashboard", () => {
   const kpis = ref<KpiCard[]>([]);
   const revenueTrend = ref<number[]>([]);
+  const revenueTrendLabels = ref<string[]>([]);
   const revenueByRegion = ref<number[]>([]);
   const revenueByRegionLabels = ref<string[]>([]);
   const recentRecords = ref<RecordItem[]>([]);
@@ -64,10 +65,12 @@ export const useDashboardStore = defineStore("dashboard", () => {
           }
         }
 
+        const revenueTrendJson = await revenueTrendRes.json();
         const revenueByRegionJson = await revenueByRegionRes.json();
 
         kpis.value = await kpisRes.json();
-        revenueTrend.value = (await revenueTrendRes.json()).data;
+        revenueTrend.value = revenueTrendJson.data;
+        revenueTrendLabels.value = revenueTrendJson.labels;
         revenueByRegion.value = revenueByRegionJson.data;
         revenueByRegionLabels.value = revenueByRegionJson.labels;
         recentRecords.value = await recentRes.json();
@@ -102,22 +105,27 @@ export const useDashboardStore = defineStore("dashboard", () => {
     error.value = null;
 
     try {
-      const [recentRes, revenueByRegionRes] = await Promise.all([
-        fetch(`/api/records/recent?${params.toString()}`),
-        fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
-      ]);
+      const [recentRes, revenueByRegionRes, revenueTrendRes] =
+        await Promise.all([
+          fetch(`/api/records/recent?${params.toString()}`),
+          fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
+          fetch(`/api/dashboard/revenue-trend?${params.toString()}`),
+        ]);
 
-      for (const res of [recentRes, revenueByRegionRes]) {
+      for (const res of [recentRes, revenueByRegionRes, revenueTrendRes]) {
         if (!res.ok) {
           throw new Error(`Request to ${res.url} failed (${res.status})`);
         }
       }
 
       const revenueByRegionJson = await revenueByRegionRes.json();
+      const revenueTrendJson = await revenueTrendRes.json();
 
       recentRecords.value = await recentRes.json();
       revenueByRegion.value = revenueByRegionJson.data;
       revenueByRegionLabels.value = revenueByRegionJson.labels;
+      revenueTrend.value = revenueTrendJson.data;
+      revenueTrendLabels.value = revenueTrendJson.labels;
     } catch (err) {
       error.value =
         err instanceof Error ? err.message : "Failed to load records";
@@ -129,6 +137,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   return {
     kpis,
     revenueTrend,
+    revenueTrendLabels,
     revenueByRegion,
     revenueByRegionLabels,
     recentRecords,

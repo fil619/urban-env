@@ -19,7 +19,7 @@ const chartOptions1 = computed(() => {
       toolbar: false,
     },
     colors: [primaryColor, darkprimaryColor],
-    labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    labels: dashboardStore.revenueTrendLabels,
     dataLabels: {
       enabled: false,
     },
