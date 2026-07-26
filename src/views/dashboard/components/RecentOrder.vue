@@ -59,7 +59,7 @@ const dashboardStore = useDashboardStore();
               variant="text"
               size="small"
               class="px-0"
-              v-if="item.status === 'rejected'"
+              v-if="item.status === 'processing'"
             >
               <v-avatar
                 size="8"

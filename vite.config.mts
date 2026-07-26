@@ -1,8 +1,9 @@
+/// <reference types="vitest/config" />
 import { fileURLToPath, URL } from 'node:url'
 import tailwindcss from '@tailwindcss/vite'
 import Vue from '@vitejs/plugin-vue'
 import Fonts from 'unplugin-fonts/vite'
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vitest/config'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
@@ -52,5 +53,20 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
+    exclude: ['node_modules/**', 'dist/**'],
+    server: {
+      deps: {
+        // Vuetify (and @mdi/font) ship per-component .css side-effect imports.
+        // Without inlining these, Vitest externalizes them and Node's native
+        // loader chokes with "Unknown file extension .css" when it tries to
+        // require() the raw file directly.
+        inline: [/vuetify/, /@mdi\/font/],
+      },
+    },
   },
 })
