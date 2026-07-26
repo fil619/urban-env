@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, shallowRef } from "vue";
+import { computed } from "vue";
 import { useTheme } from "vuetify";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
+import { useDashboardStore } from "@/stores/dashboard";
 
 const theme = useTheme();
 const InfoColor = theme.current.value.colors.info;
+const dashboardStore = useDashboardStore();
 
 const chartOptions1 = computed(() => {
   return {
@@ -56,15 +58,9 @@ const chartOptions1 = computed(() => {
   };
 });
 
-const barChart1 = shallowRef({
-  series: [{ name: "series-1", data: [] as number[] }],
-});
-
-onMounted(async () => {
-  const response = await fetch("/api/dashboard/revenue-by-region");
-  const { data } = await response.json();
-  barChart1.value = { series: [{ name: "series-1", data }] };
-});
+const barChart1 = computed(() => ({
+  series: [{ name: "series-1", data: dashboardStore.revenueByRegion }],
+}));
 </script>
 
 <template>

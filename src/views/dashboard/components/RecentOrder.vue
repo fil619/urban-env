@@ -1,23 +1,8 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from "vue";
-
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
+import { useDashboardStore } from "@/stores/dashboard";
 
-interface RecordItem {
-  date: string;
-  businessUnit: string;
-  region: string;
-  revenue: string;
-  transactions: number;
-  status: string;
-}
-
-const records = shallowRef<RecordItem[]>([]);
-
-onMounted(async () => {
-  const response = await fetch("/api/records/recent");
-  records.value = await response.json();
-});
+const dashboardStore = useDashboardStore();
 </script>
 
 <template>
@@ -54,7 +39,7 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in records" :key="item.date">
+        <tr v-for="item in dashboardStore.recentRecords" :key="item.date">
           <td class="py-3">{{ item.date }}</td>
           <td class="py-3">{{ item.businessUnit }}</td>
           <td class="py-3">{{ item.region }}</td>

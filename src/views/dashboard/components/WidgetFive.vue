@@ -1,21 +1,7 @@
 <script setup lang="ts">
-import { onMounted, shallowRef } from "vue";
+import { useDashboardStore } from "@/stores/dashboard";
 
-interface KpiCard {
-  name: string;
-  earn: string;
-  percent: string;
-  color: string;
-  icon: string;
-  text: string;
-}
-
-const fivecards = shallowRef<KpiCard[]>([]);
-
-onMounted(async () => {
-  const response = await fetch("/api/dashboard/kpis");
-  fivecards.value = await response.json();
-});
+const dashboardStore = useDashboardStore();
 </script>
 
 <template>
@@ -24,7 +10,7 @@ onMounted(async () => {
       cols="12"
       sm="6"
       md="3"
-      v-for="(card, i) in fivecards"
+      v-for="(card, i) in dashboardStore.kpis"
       :key="i"
       :value="card"
     >

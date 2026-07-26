@@ -2,16 +2,7 @@
 import { ref } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
-
-interface RecordItem {
-  id: number;
-  date: string;
-  businessUnit: string;
-  region: string;
-  revenue: string;
-  transactions: number;
-  status: string;
-}
+import { useRecordsStore } from "@/stores/records";
 
 interface DataTableOptions {
   page: number;
@@ -20,10 +11,9 @@ interface DataTableOptions {
   search: string;
 }
 
-const records = ref<RecordItem[]>([]);
-const totalRecords = ref(0);
-const loading = ref(false);
+const recordsStore = useRecordsStore();
 const search = ref("");
+const lastOptions = ref<DataTableOptions | null>(null);
 
 const headers = [
   { title: "Date", key: "date" },
@@ -34,30 +24,15 @@ const headers = [
   { title: "Status", key: "status", sortable: false },
 ];
 
-async function loadItems(options: DataTableOptions) {
-  loading.value = true;
+function loadItems(options: DataTableOptions) {
+  lastOptions.value = options;
+  recordsStore.fetchRecords(options);
+}
 
-  const params = new URLSearchParams({
-    page: String(options.page),
-    itemsPerPage: String(options.itemsPerPage),
-  });
-
-  if (options.search) {
-    params.set("search", options.search);
+function retry() {
+  if (lastOptions.value) {
+    recordsStore.fetchRecords(lastOptions.value);
   }
-
-  const sort = options.sortBy[0];
-  if (sort) {
-    params.set("sortBy", sort.key);
-    params.set("sortOrder", sort.order === "desc" ? "desc" : "asc");
-  }
-
-  const response = await fetch(`/api/records?${params.toString()}`);
-  const { items, total } = await response.json();
-
-  records.value = items;
-  totalRecords.value = total;
-  loading.value = false;
 }
 </script>
 
@@ -75,13 +50,24 @@ async function loadItems(options: DataTableOptions) {
         style="max-width: 320px"
       ></v-text-field>
     </div>
+    <v-alert
+      v-if="recordsStore.error"
+      type="error"
+      variant="tonal"
+      class="mx-4 mb-4"
+    >
+      <div class="d-flex align-center justify-space-between">
+        <span>{{ recordsStore.error }}</span>
+        <v-btn size="small" variant="text" @click="retry()"> Retry </v-btn>
+      </div>
+    </v-alert>
     <v-data-table-server
       class="bordered-table"
       :headers="headers"
-      :items="records"
-      :items-length="totalRecords"
+      :items="recordsStore.items"
+      :items-length="recordsStore.total"
       :search="search"
-      :loading="loading"
+      :loading="recordsStore.loading"
       :items-per-page="10"
       hover
       density="comfortable"

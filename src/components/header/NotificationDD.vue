@@ -1,26 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, shallowRef } from "vue";
+import { useNotificationsStore } from "@/stores/notifications";
 
-interface NotificationItem {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  icon: string;
-  color: string;
-  avatar: string;
-}
-
-const isActive = ref(true);
-const notifications = shallowRef<NotificationItem[]>([]);
-
-onMounted(async () => {
-  const response = await fetch("/api/notifications");
-  notifications.value = await response.json();
-});
+const notificationsStore = useNotificationsStore();
 
 function deactivateItem() {
-  isActive.value = false;
+  notificationsStore.markAllRead();
 }
 </script>
 
@@ -36,7 +20,11 @@ function deactivateItem() {
         v-bind="props"
       >
         <v-badge
-          :content="isActive ? notifications.length : 0"
+          :content="
+            notificationsStore.isActive
+              ? notificationsStore.notifications.length
+              : 0
+          "
           color="primary"
           offset-x="-4"
           offset-y="-5"
@@ -60,7 +48,7 @@ function deactivateItem() {
             rounded
             size="small"
             @click="deactivateItem()"
-            :class="isActive ? 'd-block' : 'd-none'"
+            :class="notificationsStore.isActive ? 'd-block' : 'd-none'"
           >
             <v-icon
               color="blue-darken-2"
@@ -71,7 +59,9 @@ function deactivateItem() {
               aria-label="tooltip"
               activator="parent"
               location="bottom"
-              :content-class="isActive ? 'custom-tooltip' : 'd-none'"
+              :content-class="
+                notificationsStore.isActive ? 'custom-tooltip' : 'd-none'
+              "
             >
               <span class="text-caption">Mark as all read</span>
             </v-tooltip>
@@ -79,6 +69,24 @@ function deactivateItem() {
         </div>
       </div>
       <v-divider></v-divider>
+      <v-alert
+        v-if="notificationsStore.error"
+        type="error"
+        variant="tonal"
+        density="compact"
+        class="ma-4"
+      >
+        <div class="d-flex align-center justify-space-between">
+          <span class="text-caption">{{ notificationsStore.error }}</span>
+          <v-btn
+            size="x-small"
+            variant="text"
+            @click="notificationsStore.fetchNotifications()"
+          >
+            Retry
+          </v-btn>
+        </div>
+      </v-alert>
       <div style="height: calc(100vh - 300px); max-height: 265px">
         <v-list
           class="py-0"
@@ -87,14 +95,14 @@ function deactivateItem() {
           aria-busy="true"
         >
           <template
-            v-for="(notification, i) in notifications"
+            v-for="(notification, i) in notificationsStore.notifications"
             :key="notification.id"
           >
             <v-list-item
               :value="notification.id"
               color="secondary"
               class="no-spacer py-1"
-              :active="isActive"
+              :active="notificationsStore.isActive"
             >
               <template v-slot:prepend>
                 <v-avatar
@@ -121,7 +129,9 @@ function deactivateItem() {
                 {{ notification.message }}
               </p>
             </v-list-item>
-            <v-divider v-if="i < notifications.length - 1"></v-divider>
+            <v-divider
+              v-if="i < notificationsStore.notifications.length - 1"
+            ></v-divider>
           </template>
         </v-list>
       </div>
