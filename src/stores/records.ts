@@ -32,7 +32,7 @@ export const useRecordsStore = defineStore("records", () => {
   let pendingQueryKey: string | null = null;
   let pendingPromise: Promise<void> | null = null;
 
-  function fetchRecords(query: RecordsQuery) {
+  const fetchRecords = (query: RecordsQuery): Promise<void> => {
     const queryKey = JSON.stringify(query);
     if (queryKey === lastQueryKey) return Promise.resolve();
     if (queryKey === pendingQueryKey && pendingPromise) return pendingPromise;
@@ -41,7 +41,7 @@ export const useRecordsStore = defineStore("records", () => {
     error.value = null;
     pendingQueryKey = queryKey;
 
-    pendingPromise = (async () => {
+    pendingPromise = (async (): Promise<void> => {
       try {
         const params = new URLSearchParams({
           page: String(query.page),
@@ -73,14 +73,16 @@ export const useRecordsStore = defineStore("records", () => {
         }
 
         const sort = query.sortBy[0];
-        if (sort) {
+        if (sort != null) {
           params.set("sortBy", sort.key);
           params.set("sortOrder", sort.order === "desc" ? "desc" : "asc");
         }
 
         const response = await fetch(`/api/records?${params.toString()}`);
         if (!response.ok) {
-          throw new Error(`Request to ${response.url} failed (${response.status})`);
+          throw new Error(
+            `Request to ${response.url} failed (${response.status})`,
+          );
         }
 
         const data = await response.json();
@@ -99,7 +101,7 @@ export const useRecordsStore = defineStore("records", () => {
     })();
 
     return pendingPromise;
-  }
+  };
 
   return {
     items,

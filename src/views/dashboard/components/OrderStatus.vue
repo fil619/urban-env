@@ -39,7 +39,7 @@ const chartOptions1 = computed(() => {
     },
     tooltip: {
       y: {
-        formatter: (value: number) => value.toLocaleString("en-US"),
+        formatter: (value: number): string => value.toLocaleString("en-US"),
       },
     },
   };

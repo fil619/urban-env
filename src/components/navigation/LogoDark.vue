@@ -1,3 +1,10 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import { RouterLink } from "vue-router";
+const primary = ref("rgb(var(--v-theme-primary))");
+const darkprimary = ref("rgb(var(--v-theme-darkprimary))");
+</script>
+
 <template>
   <div class="logo">
     <router-link to="/" aria-label="logo">
@@ -68,10 +75,3 @@
     </router-link>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import { RouterLink } from "vue-router";
-const primary = ref("rgb(var(--v-theme-primary))");
-const darkprimary = ref("rgb(var(--v-theme-darkprimary))");
-</script>

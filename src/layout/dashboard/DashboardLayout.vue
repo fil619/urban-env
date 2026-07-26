@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import SideBar from "@/components/navigation/SideBar.vue";
+import HeaderBar from "@/components/header/HeaderBar.vue";
+</script>
+
 <template>
   <v-app>
     <side-bar />
@@ -15,8 +20,3 @@
     </v-main>
   </v-app>
 </template>
-
-<script setup lang="ts">
-import SideBar from "@/components/navigation/SideBar.vue";
-import HeaderBar from "@/components/header/HeaderBar.vue";
-</script>

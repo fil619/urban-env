@@ -5,7 +5,7 @@ import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
 const theme = useTheme();
-const PrimaryColor = theme.current.value.colors.primary;
+const primaryColor = theme.current.value.colors.primary;
 const dashboardStore = useDashboardStore();
 
 const chartOptions1 = computed(() => {
@@ -29,7 +29,7 @@ const chartOptions1 = computed(() => {
       },
     },
     labels: dashboardStore.revenueByBusinessUnitLabels,
-    colors: [PrimaryColor],
+    colors: [primaryColor],
     stroke: {
       curve: "smooth",
     },
@@ -55,7 +55,7 @@ const chartOptions1 = computed(() => {
         enabled: false,
       },
       y: {
-        formatter: (value: number) => value.toLocaleString("en-US"),
+        formatter: (value: number): string => value.toLocaleString("en-US"),
       },
     },
   };

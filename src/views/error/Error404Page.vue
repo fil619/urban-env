@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import { RouterLink } from "vue-router";
+import Logo from "@/components/navigation/LogoDark.vue";
+</script>
+
 <template>
   <v-container class="fill-height" fluid>
     <v-row justify="center" align="center">
@@ -18,11 +23,6 @@
     </v-row>
   </v-container>
 </template>
-
-<script setup lang="ts">
-import { RouterLink } from "vue-router";
-import Logo from "@/components/navigation/LogoDark.vue";
-</script>
 
 <style scoped>
 .error-code {

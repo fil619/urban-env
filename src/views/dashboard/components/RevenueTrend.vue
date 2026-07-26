@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { useDashboardStore } from "@/stores/dashboard";
 
@@ -53,7 +53,7 @@ const chartOptions1 = computed(() => {
     },
     tooltip: {
       y: {
-        formatter: (value: number) => value.toLocaleString("en-US"),
+        formatter: (value: number): string => value.toLocaleString("en-US"),
       },
     },
   };
@@ -62,8 +62,6 @@ const chartOptions1 = computed(() => {
 const areaChart1 = computed(() => ({
   series: [{ name: "Revenue", data: dashboardStore.revenueTrend }],
 }));
-
-const tab = ref(1);
 </script>
 
 <template>

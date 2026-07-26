@@ -21,10 +21,12 @@ import "unfonts.css";
 import "./styles/tailwind.css";
 import "./styles/main.scss";
 
-async function enableMocking() {
+const enableMocking = async (): Promise<
+  ServiceWorkerRegistration | undefined
+> => {
   const { worker } = await import("./mocks/browser");
   return worker.start({ onUnhandledRequest: "bypass" });
-}
+};
 
 const pinia = createPinia();
 const app = createApp(App);
@@ -36,6 +38,11 @@ app.use(router);
 app.use(VueApexCharts);
 
 //Because registering the Service Worker is an asynchronous operation, it’s a good idea to defer the rendering of your application until the registration Promise resolves.
-enableMocking().then(() => {
-  app.mount("#app");
-});
+enableMocking()
+  .then(() => {
+    app.mount("#app");
+  })
+  .catch((error) => {
+    console.error("Failed to enable mocking:", error);
+    app.mount("#app");
+  });

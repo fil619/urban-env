@@ -11,7 +11,7 @@ import HeaderBar from "@/components/header/HeaderBar.vue";
 // so HeaderBar is mounted inside a minimal v-app host component. VApp must
 // be registered explicitly here since Vuetify's auto-import only rewrites
 // real .vue SFCs, not this inline defineComponent template.
-const HeaderBarHost = defineComponent({
+const headerBarHost = defineComponent({
   components: { VApp, HeaderBar },
   template: `<v-app><HeaderBar /></v-app>`,
 });
@@ -29,7 +29,7 @@ describe("HeaderBar", () => {
     expect(customizer.miniSidebar).toBe(false);
     expect(customizer.sidebar).toBe(true);
 
-    const wrapper = mount(HeaderBarHost, {
+    const wrapper = mount(headerBarHost, {
       global: {
         plugins: [vuetify, pinia],
         stubs: { NotificationDD: true },
