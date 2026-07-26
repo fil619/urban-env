@@ -36,7 +36,7 @@ const sidebarItem: MenuItem[] = [
     expand-on-hover
   >
     <div class="p-5">
-      <Logo />
+      <logo />
     </div>
     <v-list aria-busy="true" aria-label="menu list">
       <template v-for="(item, i) in sidebarItem" :key="i">

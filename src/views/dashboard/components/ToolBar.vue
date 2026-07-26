@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+defineProps<{
+  regions: { id: number; name: string }[];
+  noFiltersSelected: boolean;
+  dateRangeInvalid: boolean;
+}>();
 
 const fromDate = defineModel<Date | null>("fromDate", { default: null });
 const toDate = defineModel<Date | null>("toDate", { default: null });
@@ -9,33 +13,11 @@ const selectedRegion = defineModel<string | null>("selectedRegion", {
 const selectedStatus = defineModel<string | null>("selectedStatus", {
   default: null,
 });
-const regions = ref<{ id: number; name: string }[]>([]);
 
 const emit = defineEmits<{
-  apply: [];
-  clear: [];
+  (e: "apply"): void;
+  (e: "clear"): void;
 }>();
-
-onMounted(async () => {
-  const response = await fetch("/api/regions");
-  regions.value = await response.json();
-});
-
-function clearFilters() {
-  fromDate.value = null;
-  toDate.value = null;
-  selectedRegion.value = null;
-  selectedStatus.value = null;
-  emit("clear");
-}
-
-const noFiltersSelected = computed(
-  () =>
-    !fromDate.value &&
-    !toDate.value &&
-    !selectedRegion.value &&
-    !selectedStatus.value,
-);
 </script>
 
 <template>
@@ -53,7 +35,11 @@ const noFiltersSelected = computed(
             density="compact"
             prepend-icon=""
             prepend-inner-icon="mdi-calendar"
-            hide-details
+            hide-details="auto"
+            :rules="[
+              () =>
+                !dateRangeInvalid || 'Start date must not be after end date',
+            ]"
           ></v-date-input>
         </v-col>
         <v-col cols="12" sm="6" md="3">
@@ -64,7 +50,11 @@ const noFiltersSelected = computed(
             density="compact"
             prepend-icon=""
             prepend-inner-icon="mdi-calendar"
-            hide-details
+            hide-details="auto"
+            :rules="[
+              () =>
+                !dateRangeInvalid || 'Start date must not be after end date',
+            ]"
           ></v-date-input>
         </v-col>
         <v-col cols="12" sm="6" md="3">
@@ -92,10 +82,10 @@ const noFiltersSelected = computed(
       </v-row>
       <v-row>
         <v-col cols="12" class="d-flex justify-end ga-2">
-          <v-btn variant="outlined" @click="clearFilters">Clear</v-btn>
+          <v-btn variant="outlined" @click="emit('clear')">Clear</v-btn>
           <v-btn
             color="primary"
-            :disabled="noFiltersSelected"
+            :disabled="noFiltersSelected || dateRangeInvalid"
             @click="emit('apply')"
           >
             Apply

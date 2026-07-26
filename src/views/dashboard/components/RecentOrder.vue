@@ -6,11 +6,11 @@ const dashboardStore = useDashboardStore();
 </script>
 
 <template>
-  <UiTitleCard title="Recent Transactions" class-name="px-0 pb-0 rounded-md">
+  <ui-title-card title="Recent Transactions" class-name="px-0 pb-0 rounded-md">
     <template v-slot:action>
-      <RouterLink to="/records" class="text-caption text-primary link-hover">
+      <router-link to="/records" class="text-caption text-primary link-hover">
         Show More
-      </RouterLink>
+      </router-link>
     </template>
     <v-table class="bordered-table" hover density="comfortable">
       <thead class="bg-containerBg">
@@ -96,5 +96,5 @@ const dashboardStore = useDashboardStore();
         </tr>
       </tbody>
     </v-table>
-  </UiTitleCard>
+  </ui-title-card>
 </template>

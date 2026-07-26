@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { computed, ref, onMounted } from "vue";
 import ToolBar from "./components/ToolBar.vue";
 import WidgetFive from "./components/WidgetFive.vue";
 import RevenueTrend from "./components/RevenueTrend.vue";
@@ -13,6 +13,20 @@ const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string | null>(null);
 const selectedStatus = ref<string | null>(null);
+const regions = ref<{ id: number; name: string }[]>([]);
+
+const noFiltersSelected = computed(
+  () =>
+    !fromDate.value &&
+    !toDate.value &&
+    !selectedRegion.value &&
+    !selectedStatus.value,
+);
+
+const dateRangeInvalid = computed(
+  () =>
+    !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
+);
 
 function applyFilters() {
   dashboardStore.fetchFilteredData({
@@ -24,22 +38,31 @@ function applyFilters() {
 }
 
 function clearFilters() {
+  fromDate.value = null;
+  toDate.value = null;
+  selectedRegion.value = null;
+  selectedStatus.value = null;
   dashboardStore.fetchFilteredData();
 }
 
-onMounted(() => {
+onMounted(async () => {
   console.log("DashboardPage mounted");
+  const response = await fetch("/api/regions");
+  regions.value = await response.json();
 });
 </script>
 
 <template>
   <div>
     <div class="mb-5">
-      <ToolBar
+      <tool-bar
         v-model:from-date="fromDate"
         v-model:to-date="toDate"
         v-model:selected-region="selectedRegion"
         v-model:selected-status="selectedStatus"
+        :regions="regions"
+        :no-filters-selected="noFiltersSelected"
+        :date-range-invalid="dateRangeInvalid"
         @apply="applyFilters"
         @clear="clearFilters"
       />
@@ -67,13 +90,13 @@ onMounted(() => {
       <v-card-item class="pb-2 px-0 pt-0">
         <v-card-title class="text-h5">Performance Overview</v-card-title>
       </v-card-item>
-      <WidgetFive />
+      <widget-five />
     </v-card>
 
     <div class="flex flex-col md:flex-row gap-4 mt-5">
-      <RevenueTrend />
-      <RevenueRegion />
+      <revenue-trend />
+      <revenue-region />
     </div>
-    <RecentOrder class="mt-5" />
+    <recent-order class="mt-5" />
   </div>
 </template>

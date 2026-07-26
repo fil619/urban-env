@@ -51,63 +51,10 @@ const chartOptions1 = computed(() => {
     legend: {
       show: true,
     },
-  };
-});
-
-const chartOptions2 = computed(() => {
-  return {
-    chart: {
-      type: "area",
-      height: 450,
-      fontFamily: `inherit`,
-      foreColor: "#a1aab2",
-      toolbar: false,
-    },
-    colors: [primaryColor, darkprimaryColor],
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      width: 2,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        shadeIntensity: 1,
-        opacityFrom: 0.7,
-        opacityTo: 0.4,
-        stops: [0, 100],
+    tooltip: {
+      y: {
+        formatter: (value: number) => value.toLocaleString("en-US"),
       },
-    },
-    grid: {
-      borderColor: "rgba(var(--v-theme-borderLight), var(--v-high-opacity))",
-    },
-    xaxis: {
-      axisBorder: {
-        show: true,
-        color: "rgba(var(--v-theme-borderLight), var(--v-high-opacity))",
-      },
-      axisTicks: {
-        color: "rgba(var(--v-theme-borderLight), var(--v-high-opacity))",
-      },
-    },
-    legend: {
-      show: true,
     },
   };
 });

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main id="main-content" tabindex="-1">
-      <RouterView />
+      <router-view />
     </v-main>
   </v-app>
 </template>
