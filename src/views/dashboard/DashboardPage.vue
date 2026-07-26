@@ -26,26 +26,25 @@ const noFiltersSelected = computed(
 );
 
 const dateRangeInvalid = computed(
-  () =>
-    !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
+  () => !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
 );
 
-function applyFilters() {
+const applyFilters = () => {
   dashboardStore.fetchFilteredData({
     fromDate: fromDate.value,
     toDate: toDate.value,
     region: selectedRegion.value,
     status: selectedStatus.value,
   });
-}
+};
 
-function clearFilters() {
+const clearFilters = () => {
   fromDate.value = null;
   toDate.value = null;
   selectedRegion.value = [];
   selectedStatus.value = [];
   dashboardStore.fetchFilteredData();
-}
+};
 
 onMounted(async () => {
   console.log("DashboardPage mounted");

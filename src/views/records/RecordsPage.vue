@@ -48,7 +48,7 @@ const headers = [
   { title: "Status", key: "status", sortable: false },
 ];
 
-function fetchWithFilters(options: DataTableOptions) {
+const fetchWithFilters = (options: DataTableOptions) => {
   recordsStore.fetchRecords({
     ...options,
     fromDate: fromDate.value,
@@ -56,24 +56,24 @@ function fetchWithFilters(options: DataTableOptions) {
     region: selectedRegion.value,
     status: selectedStatus.value,
   });
-}
+};
 
-function loadItems(options: DataTableOptions) {
+const loadItems = (options: DataTableOptions) => {
   lastOptions.value = options;
   fetchWithFilters(options);
-}
+};
 
-function refetchWithFilters() {
+const refetchWithFilters = () => {
   if (lastOptions.value) {
     fetchWithFilters({ ...lastOptions.value, page: 1 });
   }
-}
+};
 
-function retry() {
+const retry = () => {
   if (lastOptions.value) {
     fetchWithFilters(lastOptions.value);
   }
-}
+};
 </script>
 
 <template>

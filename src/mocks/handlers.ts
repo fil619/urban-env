@@ -19,15 +19,15 @@ const MONTH_NAMES = [
 const DATA_START_MONTH = new Date(2026, 0, 1);
 const DATA_END_MONTH = new Date(2026, 11, 1);
 
-function parseRevenue(revenue: string) {
+const parseRevenue = (revenue: string) => {
   return Number(revenue.replace(/[£,]/g, ""));
-}
+};
 
-function monthLabel(date: Date) {
+const monthLabel = (date: Date) => {
   return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
-}
+};
 
-function getMonthRange(url: URL) {
+const getMonthRange = (url: URL) => {
   const fromDate = url.searchParams.get("fromDate");
   const toDate = url.searchParams.get("toDate");
 
@@ -50,7 +50,7 @@ function getMonthRange(url: URL) {
   }
 
   return months;
-}
+};
 
 const notifications = [
   {
@@ -93,12 +93,12 @@ const notifications = [
 
 type RecordItem = (typeof records)[number];
 
-function parseGbDate(value: string) {
+const parseGbDate = (value: string) => {
   const [day, month, year] = value.split("/").map(Number);
   return new Date(year, month - 1, day);
-}
+};
 
-function applyRecordFilters(url: URL) {
+const applyRecordFilters = (url: URL) => {
   const fromDate = url.searchParams.get("fromDate");
   const toDate = url.searchParams.get("toDate");
   const regionFilters = url.searchParams.getAll("region");
@@ -126,9 +126,9 @@ function applyRecordFilters(url: URL) {
   }
 
   return result;
-}
+};
 
-function computeKpis(url: URL) {
+const computeKpis = (url: URL) => {
   const filtered = applyRecordFilters(url);
 
   const totalRevenue = filtered.reduce(
@@ -183,7 +183,7 @@ function computeKpis(url: URL) {
       icon: "mdi-trending-down",
     },
   ];
-}
+};
 
 export const handlers = [
   http.get("/api/dashboard/kpis", ({ request }) => {

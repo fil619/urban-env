@@ -4,17 +4,17 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import vuetifyInstance from "@/plugins/vuetify";
 import RecordsPage from "@/views/records/RecordsPage.vue";
 
-function mountPage(pinia: Pinia) {
+const mountPage = (pinia: Pinia) => {
   return mount(RecordsPage, {
     global: {
       plugins: [vuetifyInstance, pinia],
     },
   });
-}
+};
 
-function fetchUrls(fetchSpy: ReturnType<typeof vi.spyOn>): string[] {
+const fetchUrls = (fetchSpy: ReturnType<typeof vi.spyOn>): string[] => {
   return (fetchSpy.mock.calls as unknown[][]).map((call) => String(call[0]));
-}
+};
 
 describe("RecordsPage", () => {
   afterEach(() => {
@@ -54,9 +54,9 @@ describe("RecordsPage", () => {
     });
     await flushPromises();
 
-    expect(fetchUrls(fetchSpy).some((url) => url.includes("/api/records"))).toBe(
-      true,
-    );
+    expect(
+      fetchUrls(fetchSpy).some((url) => url.includes("/api/records")),
+    ).toBe(true);
   });
 
   it("re-fetches /api/records when apply is emitted after options were loaded", async () => {
@@ -100,8 +100,8 @@ describe("RecordsPage", () => {
     toolBar.vm.$emit("apply");
     await flushPromises();
 
-    expect(fetchUrls(fetchSpy).some((url) => url.includes("/api/records"))).toBe(
-      false,
-    );
+    expect(
+      fetchUrls(fetchSpy).some((url) => url.includes("/api/records")),
+    ).toBe(false);
   });
 });

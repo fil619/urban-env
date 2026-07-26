@@ -7,17 +7,17 @@ const regions = [
   { id: 2, name: "Europe" },
 ];
 
-function mountToolBar(props: {
+const mountToolBar = (props: {
   noFiltersSelected: boolean;
   dateRangeInvalid: boolean;
-}) {
+}) => {
   return mountWithPlugins(ToolBar, {
     props: {
       regions,
       ...props,
     },
   });
-}
+};
 
 describe("ToolBar", () => {
   it("disables Apply when noFiltersSelected is true", () => {
