@@ -28,7 +28,7 @@ const chartOptions1 = computed(() => {
         borderRadius: 4,
       },
     },
-    labels: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
+    labels: dashboardStore.revenueByRegionLabels,
     colors: [InfoColor],
     stroke: {
       curve: "smooth",
@@ -59,7 +59,7 @@ const chartOptions1 = computed(() => {
 });
 
 const barChart1 = computed(() => ({
-  series: [{ name: "series-1", data: dashboardStore.revenueByRegion }],
+  series: [{ name: "Revenue", data: dashboardStore.revenueByRegion }],
 }));
 </script>
 

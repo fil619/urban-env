@@ -1,23 +1,41 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
-const props = defineProps<{
-  fromDate: Date | null;
-  toDate: Date | null;
-  selectedRegion: string | null;
-  selectedStatus: string | null;
+const fromDate = defineModel<Date | null>("fromDate", { default: null });
+const toDate = defineModel<Date | null>("toDate", { default: null });
+const selectedRegion = defineModel<string | null>("selectedRegion", {
+  default: null,
+});
+const selectedStatus = defineModel<string | null>("selectedStatus", {
+  default: null,
+});
+const regions = ref<{ id: number; name: string }[]>([]);
+
+const emit = defineEmits<{
+  apply: [];
+  clear: [];
 }>();
-
-const fromDate = ref(props.fromDate);
-const toDate = ref(props.toDate);
-const selectedRegion = ref(props.selectedRegion);
-const selectedStatus = ref(props.selectedStatus);
-const regions = ref<string[]>([]);
 
 onMounted(async () => {
   const response = await fetch("/api/regions");
   regions.value = await response.json();
 });
+
+function clearFilters() {
+  fromDate.value = null;
+  toDate.value = null;
+  selectedRegion.value = null;
+  selectedStatus.value = null;
+  emit("clear");
+}
+
+const noFiltersSelected = computed(
+  () =>
+    !fromDate.value &&
+    !toDate.value &&
+    !selectedRegion.value &&
+    !selectedStatus.value,
+);
 </script>
 
 <template>
@@ -56,6 +74,8 @@ onMounted(async () => {
             variant="outlined"
             density="compact"
             :items="regions"
+            item-title="name"
+            item-value="name"
             hide-details="auto"
           ></v-select>
         </v-col>
@@ -68,6 +88,18 @@ onMounted(async () => {
             :items="['Pending', 'Processing', 'Completed', 'Rejected']"
             hide-details="auto"
           ></v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12" class="d-flex justify-end ga-2">
+          <v-btn variant="outlined" @click="clearFilters">Clear</v-btn>
+          <v-btn
+            color="primary"
+            :disabled="noFiltersSelected"
+            @click="emit('apply')"
+          >
+            Apply
+          </v-btn>
         </v-col>
       </v-row>
     </v-card-text>

@@ -20,10 +20,18 @@ interface RecordItem {
   status: string;
 }
 
+interface RecentRecordsFilters {
+  fromDate?: Date | null;
+  toDate?: Date | null;
+  region?: string | null;
+  status?: string | null;
+}
+
 export const useDashboardStore = defineStore("dashboard", () => {
   const kpis = ref<KpiCard[]>([]);
   const revenueTrend = ref<number[]>([]);
   const revenueByRegion = ref<number[]>([]);
+  const revenueByRegionLabels = ref<string[]>([]);
   const recentRecords = ref<RecordItem[]>([]);
   const loaded = ref(false);
   const error = ref<string | null>(null);
@@ -56,9 +64,12 @@ export const useDashboardStore = defineStore("dashboard", () => {
           }
         }
 
+        const revenueByRegionJson = await revenueByRegionRes.json();
+
         kpis.value = await kpisRes.json();
         revenueTrend.value = (await revenueTrendRes.json()).data;
-        revenueByRegion.value = (await revenueByRegionRes.json()).data;
+        revenueByRegion.value = revenueByRegionJson.data;
+        revenueByRegionLabels.value = revenueByRegionJson.labels;
         recentRecords.value = await recentRes.json();
 
         loaded.value = true;
@@ -73,15 +84,57 @@ export const useDashboardStore = defineStore("dashboard", () => {
     return fetchPromise;
   }
 
+  async function fetchFilteredData(filters: RecentRecordsFilters = {}) {
+    const params = new URLSearchParams();
+    if (filters.fromDate) {
+      params.set("fromDate", filters.fromDate.toISOString());
+    }
+    if (filters.toDate) {
+      params.set("toDate", filters.toDate.toISOString());
+    }
+    if (filters.region) {
+      params.set("region", filters.region);
+    }
+    if (filters.status) {
+      params.set("status", filters.status);
+    }
+
+    error.value = null;
+
+    try {
+      const [recentRes, revenueByRegionRes] = await Promise.all([
+        fetch(`/api/records/recent?${params.toString()}`),
+        fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
+      ]);
+
+      for (const res of [recentRes, revenueByRegionRes]) {
+        if (!res.ok) {
+          throw new Error(`Request to ${res.url} failed (${res.status})`);
+        }
+      }
+
+      const revenueByRegionJson = await revenueByRegionRes.json();
+
+      recentRecords.value = await recentRes.json();
+      revenueByRegion.value = revenueByRegionJson.data;
+      revenueByRegionLabels.value = revenueByRegionJson.labels;
+    } catch (err) {
+      error.value =
+        err instanceof Error ? err.message : "Failed to load records";
+    }
+  }
+
   fetchDashboardData();
 
   return {
     kpis,
     revenueTrend,
     revenueByRegion,
+    revenueByRegionLabels,
     recentRecords,
     loaded,
     error,
     fetchDashboardData,
+    fetchFilteredData,
   };
 });

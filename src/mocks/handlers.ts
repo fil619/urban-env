@@ -34,7 +34,9 @@ const kpis = [
 
 const revenueTrend = [31, 40, 28, 51, 42, 109, 100];
 
-const revenueByRegion = [80, 95, 70, 42, 65, 55, 78];
+function parseRevenue(revenue: string) {
+  return Number(revenue.replace(/[£,]/g, ""));
+}
 
 const notifications = [
   {
@@ -77,17 +79,63 @@ const notifications = [
 
 type RecordItem = (typeof records)[number];
 
+function parseGbDate(value: string) {
+  const [day, month, year] = value.split("/").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function applyRecordFilters(url: URL) {
+  const fromDate = url.searchParams.get("fromDate");
+  const toDate = url.searchParams.get("toDate");
+  const region = url.searchParams.get("region");
+  const status = url.searchParams.get("status");
+
+  let result = records;
+
+  if (fromDate) {
+    const from = new Date(fromDate);
+    result = result.filter((record) => parseGbDate(record.date) >= from);
+  }
+
+  if (toDate) {
+    const to = new Date(toDate);
+    result = result.filter((record) => parseGbDate(record.date) <= to);
+  }
+
+  if (region) {
+    result = result.filter((record) => record.region === region);
+  }
+
+  if (status) {
+    result = result.filter((record) => record.status === status.toLowerCase());
+  }
+
+  return result;
+}
+
 export const handlers = [
   http.get("/api/dashboard/kpis", () => HttpResponse.json(kpis)),
   http.get("/api/dashboard/revenue-trend", () =>
     HttpResponse.json({ data: revenueTrend }),
   ),
-  http.get("/api/dashboard/revenue-by-region", () =>
-    HttpResponse.json({ data: revenueByRegion }),
-  ),
-  http.get("/api/records/recent", () =>
-    HttpResponse.json(records.slice(0, 10)),
-  ),
+  http.get("/api/dashboard/revenue-by-region", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+
+    const data = regions.map((region) =>
+      Math.round(
+        filtered
+          .filter((record) => record.region === region.name)
+          .reduce((sum, record) => sum + parseRevenue(record.revenue), 0),
+      ),
+    );
+
+    return HttpResponse.json({ labels: regions.map((r) => r.name), data });
+  }),
+  http.get("/api/records/recent", ({ request }) => {
+    const url = new URL(request.url);
+    return HttpResponse.json(applyRecordFilters(url).slice(0, 10));
+  }),
 
   http.get("/api/records", ({ request }) => {
     const url = new URL(request.url);
@@ -109,8 +157,10 @@ export const handlers = [
 
     if (sortBy) {
       result = [...result].sort((a, b) => {
-        const aValue = a[sortBy];
-        const bValue = b[sortBy];
+        const aValue =
+          sortBy === "date" ? parseGbDate(a.date).getTime() : a[sortBy];
+        const bValue =
+          sortBy === "date" ? parseGbDate(b.date).getTime() : b[sortBy];
         if (aValue === bValue) return 0;
         return aValue > bValue ? sortOrder : -sortOrder;
       });
