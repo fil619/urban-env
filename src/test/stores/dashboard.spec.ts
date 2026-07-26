@@ -19,6 +19,12 @@ describe("useDashboardStore", () => {
     expect(store.revenueTrend.length).toBeGreaterThan(0);
     expect(store.revenueTrendLabels.length).toBe(store.revenueTrend.length);
     expect(store.revenueByRegion.length).toBeGreaterThan(0);
+    expect(store.revenueByBusinessUnit.length).toBeGreaterThan(0);
+    expect(store.revenueByBusinessUnitLabels.length).toBe(
+      store.revenueByBusinessUnit.length,
+    );
+    expect(store.orderStatus.length).toBeGreaterThan(0);
+    expect(store.orderStatusLabels.length).toBe(store.orderStatus.length);
     expect(store.recentRecords.length).toBeGreaterThan(0);
   });
 

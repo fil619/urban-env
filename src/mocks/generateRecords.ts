@@ -15,7 +15,7 @@ export const regions = [
   { id: 6, name: "Africa" },
 ];
 
-const statuses = ["completed", "processing", "pending"];
+export const statuses = ["completed", "processing", "pending"];
 
 function randomDateBetween(start: Date, end: Date) {
   return new Date(

@@ -33,6 +33,10 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const revenueTrendLabels = ref<string[]>([]);
   const revenueByRegion = ref<number[]>([]);
   const revenueByRegionLabels = ref<string[]>([]);
+  const revenueByBusinessUnit = ref<number[]>([]);
+  const revenueByBusinessUnitLabels = ref<string[]>([]);
+  const orderStatus = ref<number[]>([]);
+  const orderStatusLabels = ref<string[]>([]);
   const recentRecords = ref<RecordItem[]>([]);
   const loaded = ref(false);
   const error = ref<string | null>(null);
@@ -46,18 +50,28 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
     fetchPromise = (async () => {
       try {
-        const [kpisRes, revenueTrendRes, revenueByRegionRes, recentRes] =
-          await Promise.all([
-            fetch("/api/dashboard/kpis"),
-            fetch("/api/dashboard/revenue-trend"),
-            fetch("/api/dashboard/revenue-by-region"),
-            fetch("/api/records/recent"),
-          ]);
+        const [
+          kpisRes,
+          revenueTrendRes,
+          revenueByRegionRes,
+          revenueByBusinessUnitRes,
+          orderStatusRes,
+          recentRes,
+        ] = await Promise.all([
+          fetch("/api/dashboard/kpis"),
+          fetch("/api/dashboard/revenue-trend"),
+          fetch("/api/dashboard/revenue-by-region"),
+          fetch("/api/dashboard/revenue-by-business-unit"),
+          fetch("/api/dashboard/order-status"),
+          fetch("/api/records/recent"),
+        ]);
 
         for (const res of [
           kpisRes,
           revenueTrendRes,
           revenueByRegionRes,
+          revenueByBusinessUnitRes,
+          orderStatusRes,
           recentRes,
         ]) {
           if (!res.ok) {
@@ -67,12 +81,18 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
         const revenueTrendJson = await revenueTrendRes.json();
         const revenueByRegionJson = await revenueByRegionRes.json();
+        const revenueByBusinessUnitJson = await revenueByBusinessUnitRes.json();
+        const orderStatusJson = await orderStatusRes.json();
 
         kpis.value = await kpisRes.json();
         revenueTrend.value = revenueTrendJson.data;
         revenueTrendLabels.value = revenueTrendJson.labels;
         revenueByRegion.value = revenueByRegionJson.data;
         revenueByRegionLabels.value = revenueByRegionJson.labels;
+        revenueByBusinessUnit.value = revenueByBusinessUnitJson.data;
+        revenueByBusinessUnitLabels.value = revenueByBusinessUnitJson.labels;
+        orderStatus.value = orderStatusJson.data;
+        orderStatusLabels.value = orderStatusJson.labels;
         recentRecords.value = await recentRes.json();
 
         loaded.value = true;
@@ -105,17 +125,27 @@ export const useDashboardStore = defineStore("dashboard", () => {
     error.value = null;
 
     try {
-      const [recentRes, revenueByRegionRes, revenueTrendRes, kpisRes] =
-        await Promise.all([
-          fetch(`/api/records/recent?${params.toString()}`),
-          fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
-          fetch(`/api/dashboard/revenue-trend?${params.toString()}`),
-          fetch(`/api/dashboard/kpis?${params.toString()}`),
-        ]);
+      const [
+        recentRes,
+        revenueByRegionRes,
+        revenueByBusinessUnitRes,
+        orderStatusRes,
+        revenueTrendRes,
+        kpisRes,
+      ] = await Promise.all([
+        fetch(`/api/records/recent?${params.toString()}`),
+        fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
+        fetch(`/api/dashboard/revenue-by-business-unit?${params.toString()}`),
+        fetch(`/api/dashboard/order-status?${params.toString()}`),
+        fetch(`/api/dashboard/revenue-trend?${params.toString()}`),
+        fetch(`/api/dashboard/kpis?${params.toString()}`),
+      ]);
 
       for (const res of [
         recentRes,
         revenueByRegionRes,
+        revenueByBusinessUnitRes,
+        orderStatusRes,
         revenueTrendRes,
         kpisRes,
       ]) {
@@ -125,11 +155,17 @@ export const useDashboardStore = defineStore("dashboard", () => {
       }
 
       const revenueByRegionJson = await revenueByRegionRes.json();
+      const revenueByBusinessUnitJson = await revenueByBusinessUnitRes.json();
+      const orderStatusJson = await orderStatusRes.json();
       const revenueTrendJson = await revenueTrendRes.json();
 
       recentRecords.value = await recentRes.json();
       revenueByRegion.value = revenueByRegionJson.data;
       revenueByRegionLabels.value = revenueByRegionJson.labels;
+      revenueByBusinessUnit.value = revenueByBusinessUnitJson.data;
+      revenueByBusinessUnitLabels.value = revenueByBusinessUnitJson.labels;
+      orderStatus.value = orderStatusJson.data;
+      orderStatusLabels.value = orderStatusJson.labels;
       revenueTrend.value = revenueTrendJson.data;
       revenueTrendLabels.value = revenueTrendJson.labels;
       kpis.value = await kpisRes.json();
@@ -147,6 +183,10 @@ export const useDashboardStore = defineStore("dashboard", () => {
     revenueTrendLabels,
     revenueByRegion,
     revenueByRegionLabels,
+    revenueByBusinessUnit,
+    revenueByBusinessUnitLabels,
+    orderStatus,
+    orderStatusLabels,
     recentRecords,
     loaded,
     error,

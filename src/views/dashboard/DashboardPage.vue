@@ -4,6 +4,8 @@ import ToolBar from "./components/ToolBar.vue";
 import WidgetFive from "./components/WidgetFive.vue";
 import RevenueTrend from "./components/RevenueTrend.vue";
 import RevenueRegion from "./components/RevenueRegion.vue";
+import RevenueBusinessUnit from "./components/RevenueBusinessUnit.vue";
+import OrderStatus from "./components/OrderStatus.vue";
 import RecentOrder from "./components/RecentOrder.vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
@@ -96,6 +98,10 @@ onMounted(async () => {
     <div class="flex flex-col md:flex-row gap-4 mt-5">
       <revenue-trend />
       <revenue-region />
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 mt-5">
+      <revenue-business-unit />
+      <order-status />
     </div>
     <recent-order class="mt-5" />
   </div>

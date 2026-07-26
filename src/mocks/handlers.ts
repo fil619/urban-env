@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { records, regions } from "./generateRecords";
+import { businessUnits, records, regions, statuses } from "./generateRecords";
 
 const MONTH_NAMES = [
   "Jan",
@@ -161,7 +161,7 @@ function computeKpis(url: URL) {
       icon: "mdi-trending-up",
     },
     {
-      name: "Active Business Units",
+      name: "Active Customers",
       earn: String(activeBusinessUnits),
       percent: "70.5%",
       color: "success",
@@ -175,7 +175,7 @@ function computeKpis(url: URL) {
       icon: "mdi-trending-down",
     },
     {
-      name: "Completion Rate",
+      name: "Conversion Rate",
       earn: `${completionRate}%`,
       percent: "27.4%",
       color: "error",
@@ -223,6 +223,38 @@ export const handlers = [
     );
 
     return HttpResponse.json({ labels: regions.map((r) => r.name), data });
+  }),
+  http.get("/api/dashboard/revenue-by-business-unit", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+
+    const data = businessUnits.map((unit) =>
+      Math.round(
+        filtered
+          .filter((record) => record.businessUnit === unit.name)
+          .reduce((sum, record) => sum + parseRevenue(record.revenue), 0),
+      ),
+    );
+
+    return HttpResponse.json({
+      labels: businessUnits.map((u) => u.name),
+      data,
+    });
+  }),
+  http.get("/api/dashboard/order-status", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+
+    const data = statuses.map(
+      (status) => filtered.filter((record) => record.status === status).length,
+    );
+
+    return HttpResponse.json({
+      labels: statuses.map(
+        (status) => status.charAt(0).toUpperCase() + status.slice(1),
+      ),
+      data,
+    });
   }),
   http.get("/api/records/recent", ({ request }) => {
     const url = new URL(request.url);

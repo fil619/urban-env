@@ -12,6 +12,8 @@ const stubs = {
   WidgetFive: true,
   RevenueTrend: true,
   RevenueRegion: true,
+  RevenueBusinessUnit: true,
+  OrderStatus: true,
   RecentOrder: true,
 };
 
