@@ -3,7 +3,12 @@
     <side-bar />
     <header-bar />
 
-    <v-main class="page-wrapper" scrollable>
+    <v-main
+      id="main-content"
+      class="page-wrapper"
+      scrollable
+      tabindex="-1"
+    >
       <v-container fluid>
         <router-view />
       </v-container>

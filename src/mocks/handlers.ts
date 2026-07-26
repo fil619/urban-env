@@ -8,7 +8,6 @@ const kpis = [
     percent: "59.3%",
     color: "primary",
     icon: "mdi-trending-up",
-    text: "35,000",
   },
   {
     name: "Active Customers",
@@ -16,7 +15,6 @@ const kpis = [
     percent: "70.5%",
     color: "success",
     icon: "mdi-trending-up",
-    text: "8,900",
   },
   {
     name: "Transactions",
@@ -24,7 +22,6 @@ const kpis = [
     percent: "27.4%",
     color: "warning",
     icon: "mdi-trending-down",
-    text: "1,943",
   },
   {
     name: "Conversion Rate",
@@ -32,7 +29,6 @@ const kpis = [
     percent: "27.4%",
     color: "error",
     icon: "mdi-trending-down",
-    text: "$20,395",
   },
 ];
 
@@ -43,39 +39,39 @@ const revenueByRegion = [80, 95, 70, 42, 65, 55, 78];
 const notifications = [
   {
     id: 1,
-    title: "Cristina danny's birthday",
-    message: "It's Cristina danny's birthday today.",
+    title: "Monthly target reached",
+    message: "Revenue target achieved for this month.",
     time: "3:00 AM",
-    icon: "mdi-cake-variant",
+    icon: "mdi-trending-up",
     color: "success",
     avatar: "lightsuccess",
   },
   {
     id: 2,
-    title: "New comment",
-    message: "Aida Burg commented on your post.",
+    title: "New payment received",
+    message: "Acme Corp completed their payment.",
     time: "6:00 PM",
-    icon: "mdi-message-outline",
+    icon: "mdi-cash-check",
     color: "primary",
     avatar: "lightprimary",
   },
   {
     id: 3,
-    title: "Profile 60% complete",
-    message: "Your profile is complete 60%.",
+    title: "Forecast updated",
+    message: "Revenue forecast increased by 8%.",
     time: "2:45 PM",
-    icon: "mdi-cog-outline",
-    color: "error",
-    avatar: "lighterror",
+    icon: "mdi-chart-line",
+    color: "warning",
+    avatar: "lightwarning",
   },
   {
     id: 4,
-    title: "Meeting invitation",
-    message: "Cristina Danny invited you to join Metting.",
+    title: "Invoice overdue",
+    message: "Northwind invoice is 5 days overdue.",
     time: "9:10 PM",
-    icon: "mdi-account-multiple-outline",
-    color: "primary",
-    avatar: "lightprimary",
+    icon: "mdi-file-document-alert-outline",
+    color: "error",
+    avatar: "lighterror",
   },
 ];
 

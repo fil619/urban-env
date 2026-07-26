@@ -1,0 +1,27 @@
+@use "sass:math";
+@use "sass:list";
+
+// Root font-size used as the conversion base. Assumes the browser/document
+// default (16px) — update this if `html { font-size: ... }` is ever changed.
+$rem-base: 16px !default;
+
+// Converts one px value, or a space-separated list of them (e.g. shorthand
+// padding/margin), into rem units relative to $rem-base. `0` and `auto` pass
+// through unchanged.
+@function rem-calc($values, $base: $rem-base) {
+  $rem-values: ();
+
+  @each $value in $values {
+    @if $value == 0 or $value == auto {
+      $rem-values: list.append($rem-values, $value);
+    } @else {
+      $rem-values: list.append($rem-values, math.div($value, $base) * 1rem);
+    }
+  }
+
+  @if list.length($rem-values) == 1 {
+    @return list.nth($rem-values, 1);
+  }
+
+  @return $rem-values;
+}

@@ -1,4 +1,5 @@
 @use "../variables" as *;
+@use "../functions" as *;
 // Outline Card
 .v-card--variant-outlined {
   border-color: rgba(var(--v-theme-borderLight), 1);
@@ -12,7 +13,7 @@
 }
 
 .v-card-actions {
-  padding: 14px $card-text-spacer 14px;
+  padding: rem-calc(14px) $card-text-spacer rem-calc(14px);
 }
 
 .v-card {

@@ -7,3 +7,28 @@
 .page-wrapper {
   background: rgb(var(--v-theme-containerBg));
 }
+
+// Vuetify's default field label sits at 60% opacity (medium-emphasis),
+// which fails WCAG AA contrast against a white field background. lightText
+// is already calibrated to ~4.6:1 at full opacity, so it reads as a normal
+// muted label instead of full-strength body text. Vuetify's own
+// error/focused state overrides are more specific and still win.
+.v-label.v-field-label {
+  color: rgb(var(--v-theme-lightText));
+  opacity: 1;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: rgb(var(--v-theme-primary));
+  color: rgb(var(--v-theme-on-primary));
+  transition: top 0.2s ease-in-out;
+
+  &:focus-visible {
+    top: 0;
+  }
+}
