@@ -5,7 +5,7 @@ import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
 const theme = useTheme();
-const InfoColor = theme.current.value.colors.info;
+const PrimaryColor = theme.current.value.colors.primary;
 const dashboardStore = useDashboardStore();
 
 const chartOptions1 = computed(() => {
@@ -29,7 +29,7 @@ const chartOptions1 = computed(() => {
       },
     },
     labels: dashboardStore.revenueByRegionLabels,
-    colors: [InfoColor],
+    colors: [PrimaryColor],
     stroke: {
       curve: "smooth",
     },
@@ -54,6 +54,9 @@ const chartOptions1 = computed(() => {
       fixed: {
         enabled: false,
       },
+      y: {
+        formatter: (value: number) => value.toLocaleString("en-US"),
+      },
     },
   };
 });
@@ -64,7 +67,7 @@ const barChart1 = computed(() => ({
 </script>
 
 <template>
-  <UiTitleCard
+  <ui-title-card
     title="Revenue by Region"
     class-name="pt-5 px-0 rounded-md overflow-hidden"
   >
@@ -75,5 +78,5 @@ const barChart1 = computed(() => ({
       :series="barChart1.series"
     >
     </apexchart>
-  </UiTitleCard>
+  </ui-title-card>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import ToolBar from "@/views/dashboard/components/ToolBar.vue";
@@ -20,6 +20,24 @@ const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string | null>(null);
 const selectedStatus = ref<string | null>(null);
+const regions = ref<{ id: number; name: string }[]>([]);
+
+const noFiltersSelected = computed(
+  () =>
+    !fromDate.value &&
+    !toDate.value &&
+    !selectedRegion.value &&
+    !selectedStatus.value,
+);
+
+const dateRangeInvalid = computed(
+  () => !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
+);
+
+onMounted(async () => {
+  const response = await fetch("/api/regions");
+  regions.value = await response.json();
+});
 
 const headers = [
   { title: "Date", key: "date" },
@@ -60,16 +78,19 @@ function retry() {
 
 <template>
   <div class="mb-5">
-    <ToolBar
+    <tool-bar
       v-model:from-date="fromDate"
       v-model:to-date="toDate"
       v-model:selected-region="selectedRegion"
       v-model:selected-status="selectedStatus"
+      :regions="regions"
+      :no-filters-selected="noFiltersSelected"
+      :date-range-invalid="dateRangeInvalid"
       @apply="refetchWithFilters"
       @clear="refetchWithFilters"
     />
   </div>
-  <UiTitleCard title="Records" class-name="px-0 pb-0 rounded-md">
+  <ui-title-card title="Records" class-name="px-0 pb-0 rounded-md">
     <div class="px-4 pb-4">
       <v-text-field
         v-model="search"
@@ -110,11 +131,6 @@ function retry() {
           No records found
         </div>
       </template>
-      <template v-slot:item.date="{ item }">
-        <router-link to="/dashboard/default" class="text-secondary link-hover">
-          {{ item.date }}
-        </router-link>
-      </template>
       <template v-slot:item.status="{ item }">
         <v-chip
           variant="text"
@@ -136,7 +152,12 @@ function retry() {
           class="px-0"
           v-else-if="item.status === 'processing'"
         >
-          <v-avatar size="8" color="info" variant="flat" class="mr-2"></v-avatar>
+          <v-avatar
+            size="8"
+            color="info"
+            variant="flat"
+            class="mr-2"
+          ></v-avatar>
           <p class="text-h6 mb-0">Processing</p>
         </v-chip>
         <v-chip variant="text" size="small" class="px-0" v-else>
@@ -150,7 +171,7 @@ function retry() {
         </v-chip>
       </template>
     </v-data-table-server>
-  </UiTitleCard>
+  </ui-title-card>
 </template>
 
 <style scoped>
