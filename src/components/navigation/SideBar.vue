@@ -4,7 +4,6 @@ import type { MenuItem } from "@/types/menu";
 
 import Logo from "@/components/navigation/LogoDark.vue";
 import NavGroup from "@/components/navigation/NavGroup.vue";
-import NavCollapse from "@/components/navigation/NavCollapse.vue";
 import NavItem from "@/components/navigation/NavItem.vue";
 
 const customizer = useConfigStore();
@@ -43,12 +42,6 @@ const sidebarItem: MenuItem[] = [
       <template v-for="(item, i) in sidebarItem" :key="i">
         <nav-group :item="item" v-if="item.header" :key="item.title" />
         <v-divider class="my-3" v-else-if="item.divider" />
-        <nav-collapse
-          class="leftPadding"
-          :item="item"
-          :level="0"
-          v-else-if="item.children"
-        />
         <nav-item :item="item" v-else />
       </template>
     </v-list>

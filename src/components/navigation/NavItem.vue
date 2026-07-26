@@ -14,6 +14,7 @@ withDefaults(
   <v-list-item
     :to="item.type === 'external' ? '' : item.to"
     :href="item.type === 'external' ? item.to : ''"
+    role="listitem"
     rounded
     class="mb-1"
     color="primary"
@@ -21,7 +22,9 @@ withDefaults(
     :target="item.type === 'external' ? '_blank' : ''"
   >
     <template v-slot:prepend>
-      <component :is="item.icon" class="iconClass" :level="level"></component>
+      <span>
+        <v-icon v-if="item.icon" :icon="item.icon" />
+      </span>
     </template>
     <v-list-item-title>{{ item.title }}</v-list-item-title>
     <v-list-item-subtitle

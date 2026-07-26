@@ -24,40 +24,35 @@ onMounted(async () => {
       cols="12"
       sm="6"
       md="3"
-      v-for="(card5, i) in fivecards"
+      v-for="(card, i) in fivecards"
       :key="i"
-      :value="card5"
+      :value="card"
     >
       <v-card elevation="0">
         <v-card variant="text">
           <v-card-text class="rounded-md">
             <div class="d-flex align-items-center justify-space-between">
               <div>
-                <h6 class="text-h6 text-lightText mb-1">{{ card5.name }}</h6>
+                <h6 class="text-h6 text-lightText mb-1">{{ card.name }}</h6>
                 <h4 class="text-h4 d-flex align-center mb-0">
-                  {{ card5.earn }}
+                  {{ card.earn }}
                   <v-chip
-                    :color="card5.color"
-                    :border="`${card5.color} solid thin opacity-50`"
+                    :color="card.color"
+                    :border="`${card.color} solid thin opacity-50`"
                     class="ml-2"
                     size="small"
                     label
                   >
                     <template v-slot:prepend>
                       <component
-                        :is="card5.icon"
+                        :is="card.icon"
                         :style="{ fontSize: '12px' }"
-                        :class="'mr-1 text-' + card5.color"
+                        :class="'mr-1 text-' + card.color"
                       />
                     </template>
-                    {{ card5.percent }}
+                    {{ card.percent }}
                   </v-chip>
                 </h4>
-                <span class="text-lightText text-caption pt-5 d-block"
-                  >You made an extra
-                  <span :class="'text-' + card5.color">{{ card5.text }}</span>
-                  this year</span
-                >
               </div>
             </div>
           </v-card-text>

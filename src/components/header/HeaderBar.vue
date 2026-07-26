@@ -17,6 +17,7 @@ const customizer = useConfigStore();
       variant="text"
       @click.stop="customizer.toggleMiniSidebar()"
       size="small"
+      aria-label="Toggle Sidebar"
     >
       <v-icon
         color="blue-darken-2"

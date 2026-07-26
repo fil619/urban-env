@@ -55,13 +55,7 @@ onMounted(async () => {
       </thead>
       <tbody>
         <tr v-for="item in records" :key="item.date">
-          <td class="py-3">
-            <router-link
-              to="/dashboard/default"
-              class="text-secondary link-hover"
-              >{{ item.date }}</router-link
-            >
-          </td>
+          <td class="py-3">{{ item.date }}</td>
           <td class="py-3">{{ item.businessUnit }}</td>
           <td class="py-3">{{ item.region }}</td>
           <td class="py-3 text-right" style="min-width: 100px">
