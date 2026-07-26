@@ -73,6 +73,11 @@ function retry() {
       density="comfortable"
       @update:options="loadItems"
     >
+      <template v-slot:no-data>
+        <div class="text-center text-medium-emphasis py-8">
+          No records found
+        </div>
+      </template>
       <template v-slot:item.date="{ item }">
         <router-link to="/dashboard/default" class="text-secondary link-hover">
           {{ item.date }}

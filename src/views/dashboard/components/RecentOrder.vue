@@ -39,6 +39,11 @@ const dashboardStore = useDashboardStore();
         </tr>
       </thead>
       <tbody>
+        <tr v-if="dashboardStore.recentRecords.length === 0">
+          <td colspan="6" class="text-center text-medium-emphasis py-8">
+            No transactions found
+          </td>
+        </tr>
         <tr v-for="item in dashboardStore.recentRecords" :key="item.date">
           <td class="py-3">{{ item.date }}</td>
           <td class="py-3">{{ item.businessUnit }}</td>
