@@ -32,6 +32,24 @@ describe("mock API handlers", () => {
     }
   });
 
+  it("GET /api/records filters by multiple regions and statuses", async () => {
+    const [first, second] = records;
+    const params = new URLSearchParams({ page: "1", itemsPerPage: "-1" });
+    params.append("region", first.region);
+    params.append("region", second.region);
+    params.append("status", first.status);
+    params.append("status", second.status);
+
+    const res = await fetch(`/api/records?${params.toString()}`);
+    const body = await res.json();
+
+    expect(body.items.length).toBeGreaterThan(0);
+    for (const item of body.items) {
+      expect([first.region, second.region]).toContain(item.region);
+      expect([first.status, second.status]).toContain(item.status);
+    }
+  });
+
   it("GET /api/records searches across fields", async () => {
     const target = records[0];
     const res = await fetch(

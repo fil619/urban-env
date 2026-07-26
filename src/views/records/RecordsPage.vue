@@ -18,16 +18,16 @@ const lastOptions = ref<DataTableOptions | null>(null);
 
 const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
-const selectedRegion = ref<string | null>(null);
-const selectedStatus = ref<string | null>(null);
+const selectedRegion = ref<string[]>([]);
+const selectedStatus = ref<string[]>([]);
 const regions = ref<{ id: number; name: string }[]>([]);
 
 const noFiltersSelected = computed(
   () =>
     !fromDate.value &&
     !toDate.value &&
-    !selectedRegion.value &&
-    !selectedStatus.value,
+    selectedRegion.value.length === 0 &&
+    selectedStatus.value.length === 0,
 );
 
 const dateRangeInvalid = computed(

@@ -101,8 +101,8 @@ function parseGbDate(value: string) {
 function applyRecordFilters(url: URL) {
   const fromDate = url.searchParams.get("fromDate");
   const toDate = url.searchParams.get("toDate");
-  const region = url.searchParams.get("region");
-  const status = url.searchParams.get("status");
+  const regionFilters = url.searchParams.getAll("region");
+  const statusFilters = url.searchParams.getAll("status");
 
   let result = records;
 
@@ -116,12 +116,13 @@ function applyRecordFilters(url: URL) {
     result = result.filter((record) => parseGbDate(record.date) <= to);
   }
 
-  if (region) {
-    result = result.filter((record) => record.region === region);
+  if (regionFilters.length > 0) {
+    result = result.filter((record) => regionFilters.includes(record.region));
   }
 
-  if (status) {
-    result = result.filter((record) => record.status === status.toLowerCase());
+  if (statusFilters.length > 0) {
+    const lowered = statusFilters.map((status) => status.toLowerCase());
+    result = result.filter((record) => lowered.includes(record.status));
   }
 
   return result;

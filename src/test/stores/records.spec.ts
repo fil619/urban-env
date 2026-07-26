@@ -71,8 +71,8 @@ describe("useRecordsStore", () => {
       ...baseQuery,
       search: "Acme",
       sortBy: [{ key: "revenue", order: "desc" }],
-      region: "Europe",
-      status: "Completed",
+      region: ["Europe", "Asia Pacific"],
+      status: ["Completed"],
       fromDate: new Date(2026, 0, 1),
       toDate: new Date(2026, 5, 1),
     });
@@ -80,8 +80,11 @@ describe("useRecordsStore", () => {
     expect(captured.url?.searchParams.get("search")).toBe("Acme");
     expect(captured.url?.searchParams.get("sortBy")).toBe("revenue");
     expect(captured.url?.searchParams.get("sortOrder")).toBe("desc");
-    expect(captured.url?.searchParams.get("region")).toBe("Europe");
-    expect(captured.url?.searchParams.get("status")).toBe("Completed");
+    expect(captured.url?.searchParams.getAll("region")).toEqual([
+      "Europe",
+      "Asia Pacific",
+    ]);
+    expect(captured.url?.searchParams.getAll("status")).toEqual(["Completed"]);
   });
 
   it("sets loading while the request is in flight", async () => {

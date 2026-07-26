@@ -108,6 +108,20 @@ describe("ToolBar", () => {
     expect(itemsProps).toContainEqual(regions);
   });
 
+  it("allows multiple selections for both region and status", () => {
+    const wrapper = mountToolBar({
+      noFiltersSelected: false,
+      dateRangeInvalid: false,
+    });
+
+    const selects = wrapper.findAllComponents({ name: "VSelect" });
+    expect(selects.length).toBe(2);
+
+    for (const select of selects) {
+      expect(select.props("multiple")).toBe(true);
+    }
+  });
+
   it("passes a validation rule that reports the date range error when dateRangeInvalid is true", () => {
     const wrapper = mountToolBar({
       noFiltersSelected: false,

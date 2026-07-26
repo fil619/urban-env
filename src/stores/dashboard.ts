@@ -23,8 +23,8 @@ interface RecordItem {
 interface RecentRecordsFilters {
   fromDate?: Date | null;
   toDate?: Date | null;
-  region?: string | null;
-  status?: string | null;
+  region?: string[] | null;
+  status?: string[] | null;
 }
 
 export const useDashboardStore = defineStore("dashboard", () => {
@@ -116,10 +116,14 @@ export const useDashboardStore = defineStore("dashboard", () => {
       params.set("toDate", filters.toDate.toISOString());
     }
     if (filters.region) {
-      params.set("region", filters.region);
+      for (const region of filters.region) {
+        params.append("region", region);
+      }
     }
     if (filters.status) {
-      params.set("status", filters.status);
+      for (const status of filters.status) {
+        params.append("status", status);
+      }
     }
 
     error.value = null;
