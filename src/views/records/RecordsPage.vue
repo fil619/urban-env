@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import ToolBar from "@/views/dashboard/components/ToolBar.vue";
@@ -14,7 +14,17 @@ interface DataTableOptions {
 
 const recordsStore = useRecordsStore();
 const search = ref("");
+const searchInput = ref("");
 const lastOptions = ref<DataTableOptions | null>(null);
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+watch(searchInput, (newVal) => {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    search.value = newVal;
+  }, 500);
+});
 
 const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
@@ -93,7 +103,7 @@ const retry = () => {
   <ui-title-card title="Records" class-name="px-0 pb-0 rounded-md">
     <div class="px-4 pb-4">
       <v-text-field
-        v-model="search"
+        v-model="searchInput"
         label="Search records"
         prepend-inner-icon="mdi-magnify"
         variant="outlined"
