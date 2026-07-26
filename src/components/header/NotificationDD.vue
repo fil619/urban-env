@@ -3,7 +3,7 @@ import { useNotificationsStore } from "@/stores/notifications";
 
 const notificationsStore = useNotificationsStore();
 
-const deactivateItem = () => {
+const deactivateItem = (): void => {
   notificationsStore.markAllRead();
 };
 </script>

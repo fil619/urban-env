@@ -2,7 +2,6 @@
 import { useConfigStore } from "@/stores/config";
 
 import NotificationDD from "./NotificationDD.vue";
-import SearchBar from "./SearchBarPanel.vue";
 
 const customizer = useConfigStore();
 </script>

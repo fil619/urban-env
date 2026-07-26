@@ -10,6 +10,6 @@ import type { App } from "vue";
 // Plugins
 import vuetify from "./vuetify";
 
-export const registerPlugins = (app: App) => {
+export const registerPlugins = (app: App): void => {
   app.use(vuetify);
 };

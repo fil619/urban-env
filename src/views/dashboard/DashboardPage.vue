@@ -29,8 +29,8 @@ const dateRangeInvalid = computed(
   () => !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
 );
 
-const applyFilters = () => {
-  dashboardStore.fetchFilteredData({
+const applyFilters = (): void => {
+  void dashboardStore.fetchFilteredData({
     fromDate: fromDate.value,
     toDate: toDate.value,
     region: selectedRegion.value,
@@ -38,12 +38,12 @@ const applyFilters = () => {
   });
 };
 
-const clearFilters = () => {
+const clearFilters = (): void => {
   fromDate.value = null;
   toDate.value = null;
   selectedRegion.value = [];
   selectedStatus.value = [];
-  dashboardStore.fetchFilteredData();
+  void dashboardStore.fetchFilteredData();
 };
 
 onMounted(async () => {

@@ -6,11 +6,11 @@ export const useConfigStore = defineStore("customizer", () => {
   const sidebar = ref(true);
   const miniSidebar = ref(false);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (): void => {
     sidebar.value = !sidebar.value;
   };
 
-  const toggleMiniSidebar = () => {
+  const toggleMiniSidebar = (): void => {
     miniSidebar.value = !miniSidebar.value;
   };
 

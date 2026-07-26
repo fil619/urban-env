@@ -42,13 +42,13 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const error = ref<string | null>(null);
   let fetchPromise: Promise<void> | null = null;
 
-  function fetchDashboardData() {
+  const fetchDashboardData = (): Promise<void> => {
     if (loaded.value) return Promise.resolve();
     if (fetchPromise) return fetchPromise;
 
     error.value = null;
 
-    fetchPromise = (async () => {
+    fetchPromise = (async (): Promise<void> => {
       try {
         const [
           kpisRes,
@@ -105,9 +105,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
     })();
 
     return fetchPromise;
-  }
+  };
 
-  async function fetchFilteredData(filters: RecentRecordsFilters = {}) {
+  const fetchFilteredData = async (
+    filters: RecentRecordsFilters = {},
+  ): Promise<void> => {
     const params = new URLSearchParams();
     if (filters.fromDate) {
       params.set("fromDate", filters.fromDate.toISOString());
@@ -177,9 +179,9 @@ export const useDashboardStore = defineStore("dashboard", () => {
       error.value =
         err instanceof Error ? err.message : "Failed to load records";
     }
-  }
+  };
 
-  fetchDashboardData();
+  void fetchDashboardData();
 
   return {
     kpis,

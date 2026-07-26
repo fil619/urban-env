@@ -19,17 +19,19 @@ export const useNotificationsStore = defineStore("notifications", () => {
   const error = ref<string | null>(null);
   let fetchPromise: Promise<void> | null = null;
 
-  function fetchNotifications() {
+  const fetchNotifications = (): Promise<void> => {
     if (loaded.value) return Promise.resolve();
     if (fetchPromise) return fetchPromise;
 
     error.value = null;
 
-    fetchPromise = (async () => {
+    fetchPromise = (async (): Promise<void> => {
       try {
         const response = await fetch("/api/notifications");
         if (!response.ok) {
-          throw new Error(`Request to ${response.url} failed (${response.status})`);
+          throw new Error(
+            `Request to ${response.url} failed (${response.status})`,
+          );
         }
         notifications.value = await response.json();
         loaded.value = true;
@@ -42,13 +44,13 @@ export const useNotificationsStore = defineStore("notifications", () => {
     })();
 
     return fetchPromise;
-  }
+  };
 
-  function markAllRead() {
+  const markAllRead = (): void => {
     isActive.value = false;
-  }
+  };
 
-  fetchNotifications();
+  void fetchNotifications();
 
   return {
     notifications,

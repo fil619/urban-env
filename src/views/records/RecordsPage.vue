@@ -20,7 +20,7 @@ const lastOptions = ref<DataTableOptions | null>(null);
 let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
 watch(searchInput, (newVal) => {
-  if (debounceTimer) clearTimeout(debounceTimer);
+  if (debounceTimer != null) clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
     search.value = newVal;
   }, 500);
@@ -58,8 +58,8 @@ const headers = [
   { title: "Status", key: "status", sortable: false },
 ];
 
-const fetchWithFilters = (options: DataTableOptions) => {
-  recordsStore.fetchRecords({
+const fetchWithFilters = (options: DataTableOptions): void => {
+  void recordsStore.fetchRecords({
     ...options,
     fromDate: fromDate.value,
     toDate: toDate.value,
@@ -68,18 +68,18 @@ const fetchWithFilters = (options: DataTableOptions) => {
   });
 };
 
-const loadItems = (options: DataTableOptions) => {
+const loadItems = (options: DataTableOptions): void => {
   lastOptions.value = options;
   fetchWithFilters(options);
 };
 
-const refetchWithFilters = () => {
+const refetchWithFilters = (): void => {
   if (lastOptions.value) {
     fetchWithFilters({ ...lastOptions.value, page: 1 });
   }
 };
 
-const retry = () => {
+const retry = (): void => {
   if (lastOptions.value) {
     fetchWithFilters(lastOptions.value);
   }
@@ -136,12 +136,13 @@ const retry = () => {
       density="comfortable"
       @update:options="loadItems"
     >
-      <template v-slot:no-data>
+      <template #no-data>
         <div class="text-center text-medium-emphasis py-8">
           No records found
         </div>
       </template>
-      <template v-slot:item.status="{ item }">
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.status="{ item }">
         <v-chip
           variant="text"
           size="small"
