@@ -1,15 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import ToolBar from "./components/ToolBar.vue";
 import WidgetFive from "./components/WidgetFive.vue";
 import RevenueTrend from "./components/RevenueTrend.vue";
 import RevenueRegion from "./components/RevenueRegion.vue";
 import RecentOrder from "./components/RecentOrder.vue";
+import { useDashboardStore } from "@/stores/dashboard";
+
+const dashboardStore = useDashboardStore();
 
 const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string | null>(null);
 const selectedStatus = ref<string | null>(null);
+
+onMounted(() => {
+  console.log("DashboardPage mounted");
+});
 </script>
 
 <template>
@@ -22,6 +29,24 @@ const selectedStatus = ref<string | null>(null);
         :selected-status="selectedStatus"
       />
     </div>
+
+    <v-alert
+      v-if="dashboardStore.error"
+      type="error"
+      variant="tonal"
+      class="mb-5"
+    >
+      <div class="d-flex align-center justify-space-between">
+        <span>{{ dashboardStore.error }}</span>
+        <v-btn
+          size="small"
+          variant="text"
+          @click="dashboardStore.fetchDashboardData()"
+        >
+          Retry
+        </v-btn>
+      </div>
+    </v-alert>
 
     <v-card class="title-card" variant="text">
       <v-card-item class="pb-2 px-0 pt-0">

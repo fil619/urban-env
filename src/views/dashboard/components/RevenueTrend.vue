@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef } from "vue";
+import { computed, ref } from "vue";
 import { useTheme } from "vuetify";
+import { useDashboardStore } from "@/stores/dashboard";
+
+const dashboardStore = useDashboardStore();
 
 const theme = useTheme();
 const primaryColor = theme.current.value.colors.primary;
@@ -109,15 +112,9 @@ const chartOptions2 = computed(() => {
   };
 });
 
-const areaChart1 = shallowRef({
-  series: [{ name: "Revenue", data: [] as number[] }],
-});
-
-onMounted(async () => {
-  const response = await fetch("/api/dashboard/revenue-trend");
-  const { data } = await response.json();
-  areaChart1.value = { series: [{ name: "Revenue", data }] };
-});
+const areaChart1 = computed(() => ({
+  series: [{ name: "Revenue", data: dashboardStore.revenueTrend }],
+}));
 
 const tab = ref(1);
 </script>
