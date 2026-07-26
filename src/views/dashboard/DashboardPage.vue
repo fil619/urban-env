@@ -14,6 +14,19 @@ const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string | null>(null);
 const selectedStatus = ref<string | null>(null);
 
+function applyFilters() {
+  dashboardStore.fetchFilteredData({
+    fromDate: fromDate.value,
+    toDate: toDate.value,
+    region: selectedRegion.value,
+    status: selectedStatus.value,
+  });
+}
+
+function clearFilters() {
+  dashboardStore.fetchFilteredData();
+}
+
 onMounted(() => {
   console.log("DashboardPage mounted");
 });
@@ -23,10 +36,12 @@ onMounted(() => {
   <div>
     <div class="mb-5">
       <ToolBar
-        :from-date="fromDate"
-        :to-date="toDate"
-        :selected-region="selectedRegion"
-        :selected-status="selectedStatus"
+        v-model:from-date="fromDate"
+        v-model:to-date="toDate"
+        v-model:selected-region="selectedRegion"
+        v-model:selected-status="selectedStatus"
+        @apply="applyFilters"
+        @clear="clearFilters"
       />
     </div>
 

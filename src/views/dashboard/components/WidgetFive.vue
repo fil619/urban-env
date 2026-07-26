@@ -22,22 +22,6 @@ const dashboardStore = useDashboardStore();
                 <h6 class="text-h6 text-lightText mb-1">{{ card.name }}</h6>
                 <h4 class="text-h4 d-flex align-center mb-0">
                   {{ card.earn }}
-                  <v-chip
-                    :color="card.color"
-                    :border="`${card.color} solid thin opacity-50`"
-                    class="ml-2"
-                    size="small"
-                    label
-                  >
-                    <template v-slot:prepend>
-                      <component
-                        :is="card.icon"
-                        :style="{ fontSize: '12px' }"
-                        :class="'mr-1 text-' + card.color"
-                      />
-                    </template>
-                    {{ card.percent }}
-                  </v-chip>
                 </h4>
               </div>
             </div>
