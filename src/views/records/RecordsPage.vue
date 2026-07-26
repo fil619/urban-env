@@ -2,6 +2,7 @@
 import { ref } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
+import ToolBar from "@/views/dashboard/components/ToolBar.vue";
 import { useRecordsStore } from "@/stores/records";
 
 interface DataTableOptions {
@@ -15,6 +16,11 @@ const recordsStore = useRecordsStore();
 const search = ref("");
 const lastOptions = ref<DataTableOptions | null>(null);
 
+const fromDate = ref<Date | null>(null);
+const toDate = ref<Date | null>(null);
+const selectedRegion = ref<string | null>(null);
+const selectedStatus = ref<string | null>(null);
+
 const headers = [
   { title: "Date", key: "date" },
   { title: "Business Unit", key: "businessUnit" },
@@ -24,19 +30,45 @@ const headers = [
   { title: "Status", key: "status", sortable: false },
 ];
 
+function fetchWithFilters(options: DataTableOptions) {
+  recordsStore.fetchRecords({
+    ...options,
+    fromDate: fromDate.value,
+    toDate: toDate.value,
+    region: selectedRegion.value,
+    status: selectedStatus.value,
+  });
+}
+
 function loadItems(options: DataTableOptions) {
   lastOptions.value = options;
-  recordsStore.fetchRecords(options);
+  fetchWithFilters(options);
+}
+
+function refetchWithFilters() {
+  if (lastOptions.value) {
+    fetchWithFilters({ ...lastOptions.value, page: 1 });
+  }
 }
 
 function retry() {
   if (lastOptions.value) {
-    recordsStore.fetchRecords(lastOptions.value);
+    fetchWithFilters(lastOptions.value);
   }
 }
 </script>
 
 <template>
+  <div class="mb-5">
+    <ToolBar
+      v-model:from-date="fromDate"
+      v-model:to-date="toDate"
+      v-model:selected-region="selectedRegion"
+      v-model:selected-status="selectedStatus"
+      @apply="refetchWithFilters"
+      @clear="refetchWithFilters"
+    />
+  </div>
   <UiTitleCard title="Records" class-name="px-0 pb-0 rounded-md">
     <div class="px-4 pb-4">
       <v-text-field

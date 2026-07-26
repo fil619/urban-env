@@ -17,6 +17,10 @@ interface RecordsQuery {
   itemsPerPage: number;
   sortBy: { key: string; order?: boolean | "asc" | "desc" }[];
   search: string;
+  fromDate?: Date | null;
+  toDate?: Date | null;
+  region?: string | null;
+  status?: string | null;
 }
 
 export const useRecordsStore = defineStore("records", () => {
@@ -46,6 +50,22 @@ export const useRecordsStore = defineStore("records", () => {
 
         if (query.search) {
           params.set("search", query.search);
+        }
+
+        if (query.fromDate) {
+          params.set("fromDate", query.fromDate.toISOString());
+        }
+
+        if (query.toDate) {
+          params.set("toDate", query.toDate.toISOString());
+        }
+
+        if (query.region) {
+          params.set("region", query.region);
+        }
+
+        if (query.status) {
+          params.set("status", query.status);
         }
 
         const sort = query.sortBy[0];

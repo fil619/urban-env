@@ -1,37 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { records, regions } from "./generateRecords";
 
-const kpis = [
-  {
-    name: "Revenue",
-    earn: "4,42,236",
-    percent: "59.3%",
-    color: "primary",
-    icon: "mdi-trending-up",
-  },
-  {
-    name: "Active Customers",
-    earn: "78,250",
-    percent: "70.5%",
-    color: "success",
-    icon: "mdi-trending-up",
-  },
-  {
-    name: "Transactions",
-    earn: "18,800",
-    percent: "27.4%",
-    color: "warning",
-    icon: "mdi-trending-down",
-  },
-  {
-    name: "Conversion Rate",
-    earn: "$35,078",
-    percent: "27.4%",
-    color: "error",
-    icon: "mdi-trending-down",
-  },
-];
-
 const MONTH_NAMES = [
   "Jan",
   "Feb",
@@ -158,8 +127,68 @@ function applyRecordFilters(url: URL) {
   return result;
 }
 
+function computeKpis(url: URL) {
+  const filtered = applyRecordFilters(url);
+
+  const totalRevenue = filtered.reduce(
+    (sum, record) => sum + parseRevenue(record.revenue),
+    0,
+  );
+
+  const totalTransactions = filtered.reduce(
+    (sum, record) => sum + record.transactions,
+    0,
+  );
+
+  const activeBusinessUnits = new Set(
+    filtered.map((record) => record.businessUnit),
+  ).size;
+
+  const completedCount = filtered.filter(
+    (record) => record.status === "completed",
+  ).length;
+  const completionRate =
+    filtered.length > 0
+      ? Math.round((completedCount / filtered.length) * 1000) / 10
+      : 0;
+
+  return [
+    {
+      name: "Revenue",
+      earn: `£${Math.round(totalRevenue).toLocaleString("en-GB")}`,
+      percent: "59.3%",
+      color: "primary",
+      icon: "mdi-trending-up",
+    },
+    {
+      name: "Active Business Units",
+      earn: String(activeBusinessUnits),
+      percent: "70.5%",
+      color: "success",
+      icon: "mdi-trending-up",
+    },
+    {
+      name: "Transactions",
+      earn: totalTransactions.toLocaleString("en-GB"),
+      percent: "27.4%",
+      color: "warning",
+      icon: "mdi-trending-down",
+    },
+    {
+      name: "Completion Rate",
+      earn: `${completionRate}%`,
+      percent: "27.4%",
+      color: "error",
+      icon: "mdi-trending-down",
+    },
+  ];
+}
+
 export const handlers = [
-  http.get("/api/dashboard/kpis", () => HttpResponse.json(kpis)),
+  http.get("/api/dashboard/kpis", ({ request }) => {
+    const url = new URL(request.url);
+    return HttpResponse.json(computeKpis(url));
+  }),
   http.get("/api/dashboard/revenue-trend", ({ request }) => {
     const url = new URL(request.url);
     const filtered = applyRecordFilters(url);
@@ -208,7 +237,7 @@ export const handlers = [
     const page = Math.max(1, Number(url.searchParams.get("page") ?? "1"));
     const itemsPerPage = Number(url.searchParams.get("itemsPerPage") ?? "10");
 
-    let result = records;
+    let result = applyRecordFilters(url);
 
     if (search) {
       result = result.filter((record) =>

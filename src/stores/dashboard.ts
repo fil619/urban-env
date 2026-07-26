@@ -105,14 +105,20 @@ export const useDashboardStore = defineStore("dashboard", () => {
     error.value = null;
 
     try {
-      const [recentRes, revenueByRegionRes, revenueTrendRes] =
+      const [recentRes, revenueByRegionRes, revenueTrendRes, kpisRes] =
         await Promise.all([
           fetch(`/api/records/recent?${params.toString()}`),
           fetch(`/api/dashboard/revenue-by-region?${params.toString()}`),
           fetch(`/api/dashboard/revenue-trend?${params.toString()}`),
+          fetch(`/api/dashboard/kpis?${params.toString()}`),
         ]);
 
-      for (const res of [recentRes, revenueByRegionRes, revenueTrendRes]) {
+      for (const res of [
+        recentRes,
+        revenueByRegionRes,
+        revenueTrendRes,
+        kpisRes,
+      ]) {
         if (!res.ok) {
           throw new Error(`Request to ${res.url} failed (${res.status})`);
         }
@@ -126,6 +132,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
       revenueByRegionLabels.value = revenueByRegionJson.labels;
       revenueTrend.value = revenueTrendJson.data;
       revenueTrendLabels.value = revenueTrendJson.labels;
+      kpis.value = await kpisRes.json();
     } catch (err) {
       error.value =
         err instanceof Error ? err.message : "Failed to load records";
