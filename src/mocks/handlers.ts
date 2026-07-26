@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { records } from "./generateRecords";
+import { records, regions } from "./generateRecords";
 
 const kpis = [
   {
@@ -124,4 +124,6 @@ export const handlers = [
   }),
 
   http.get("/api/notifications", () => HttpResponse.json(notifications)),
+
+  http.get("/api/regions", () => HttpResponse.json(regions)),
 ];

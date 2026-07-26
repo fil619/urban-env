@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const props = defineProps<{
   fromDate: Date | null;
@@ -12,6 +12,12 @@ const fromDate = ref(props.fromDate);
 const toDate = ref(props.toDate);
 const selectedRegion = ref(props.selectedRegion);
 const selectedStatus = ref(props.selectedStatus);
+const regions = ref<string[]>([]);
+
+onMounted(async () => {
+  const response = await fetch("/api/regions");
+  regions.value = await response.json();
+});
 </script>
 
 <template>
@@ -46,17 +52,10 @@ const selectedStatus = ref(props.selectedStatus);
         <v-col cols="12" sm="6" md="3">
           <v-select
             v-model="selectedRegion"
-            label="Select"
+            label="Region"
             variant="outlined"
             density="compact"
-            :items="[
-              'California',
-              'Colorado',
-              'Florida',
-              'Georgia',
-              'Texas',
-              'Wyoming',
-            ]"
+            :items="regions"
             hide-details="auto"
           ></v-select>
         </v-col>

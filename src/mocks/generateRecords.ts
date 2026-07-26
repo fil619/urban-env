@@ -6,7 +6,7 @@ const businessUnits = [
   "Investment Banking",
 ];
 
-const regions = [
+export const regions = [
   "North America",
   "Europe",
   "Asia Pacific",
