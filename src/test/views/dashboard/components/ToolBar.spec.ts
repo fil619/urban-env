@@ -7,17 +7,17 @@ const regions = [
   { id: 2, name: "Europe" },
 ];
 
-function mountToolBar(props: {
+const mountToolBar = (props: {
   noFiltersSelected: boolean;
   dateRangeInvalid: boolean;
-}) {
+}) => {
   return mountWithPlugins(ToolBar, {
     props: {
       regions,
       ...props,
     },
   });
-}
+};
 
 describe("ToolBar", () => {
   it("disables Apply when noFiltersSelected is true", () => {
@@ -106,6 +106,20 @@ describe("ToolBar", () => {
     const itemsProps = selects.map((select) => select.props("items"));
 
     expect(itemsProps).toContainEqual(regions);
+  });
+
+  it("allows multiple selections for both region and status", () => {
+    const wrapper = mountToolBar({
+      noFiltersSelected: false,
+      dateRangeInvalid: false,
+    });
+
+    const selects = wrapper.findAllComponents({ name: "VSelect" });
+    expect(selects.length).toBe(2);
+
+    for (const select of selects) {
+      expect(select.props("multiple")).toBe(true);
+    }
   });
 
   it("passes a validation rule that reports the date range error when dateRangeInvalid is true", () => {

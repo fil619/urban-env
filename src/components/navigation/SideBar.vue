@@ -40,7 +40,11 @@ const sidebarItem: MenuItem[] = [
     </div>
     <v-list aria-busy="true" aria-label="menu list">
       <template v-for="(item, i) in sidebarItem" :key="i">
-        <nav-group :item="item" v-if="item.header" :key="item.title" />
+        <nav-group
+          :item="item"
+          v-if="item.header && !customizer.miniSidebar"
+          :key="item.title"
+        />
         <v-divider class="my-3" v-else-if="item.divider" />
         <nav-item :item="item" v-else />
       </template>

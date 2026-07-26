@@ -12,17 +12,19 @@ const stubs = {
   WidgetFive: true,
   RevenueTrend: true,
   RevenueRegion: true,
+  RevenueBusinessUnit: true,
+  OrderStatus: true,
   RecentOrder: true,
 };
 
-function mountPage(pinia: Pinia) {
+const mountPage = (pinia: Pinia) => {
   return mount(DashboardPage, {
     global: {
       plugins: [vuetifyInstance, pinia],
       stubs,
     },
   });
-}
+};
 
 describe("DashboardPage", () => {
   afterEach(() => {
@@ -118,7 +120,10 @@ describe("DashboardPage", () => {
     setActivePinia(pinia);
 
     server.use(
-      http.get("/api/dashboard/kpis", () => new HttpResponse(null, { status: 500 })),
+      http.get(
+        "/api/dashboard/kpis",
+        () => new HttpResponse(null, { status: 500 }),
+      ),
     );
 
     const store = useDashboardStore();

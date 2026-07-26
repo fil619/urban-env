@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import ToolBar from "@/views/dashboard/components/ToolBar.vue";
@@ -14,20 +14,30 @@ interface DataTableOptions {
 
 const recordsStore = useRecordsStore();
 const search = ref("");
+const searchInput = ref("");
 const lastOptions = ref<DataTableOptions | null>(null);
+
+let debounceTimer: ReturnType<typeof setTimeout> | null = null;
+
+watch(searchInput, (newVal) => {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    search.value = newVal;
+  }, 500);
+});
 
 const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
-const selectedRegion = ref<string | null>(null);
-const selectedStatus = ref<string | null>(null);
+const selectedRegion = ref<string[]>([]);
+const selectedStatus = ref<string[]>([]);
 const regions = ref<{ id: number; name: string }[]>([]);
 
 const noFiltersSelected = computed(
   () =>
     !fromDate.value &&
     !toDate.value &&
-    !selectedRegion.value &&
-    !selectedStatus.value,
+    selectedRegion.value.length === 0 &&
+    selectedStatus.value.length === 0,
 );
 
 const dateRangeInvalid = computed(
@@ -48,7 +58,7 @@ const headers = [
   { title: "Status", key: "status", sortable: false },
 ];
 
-function fetchWithFilters(options: DataTableOptions) {
+const fetchWithFilters = (options: DataTableOptions) => {
   recordsStore.fetchRecords({
     ...options,
     fromDate: fromDate.value,
@@ -56,24 +66,24 @@ function fetchWithFilters(options: DataTableOptions) {
     region: selectedRegion.value,
     status: selectedStatus.value,
   });
-}
+};
 
-function loadItems(options: DataTableOptions) {
+const loadItems = (options: DataTableOptions) => {
   lastOptions.value = options;
   fetchWithFilters(options);
-}
+};
 
-function refetchWithFilters() {
+const refetchWithFilters = () => {
   if (lastOptions.value) {
     fetchWithFilters({ ...lastOptions.value, page: 1 });
   }
-}
+};
 
-function retry() {
+const retry = () => {
   if (lastOptions.value) {
     fetchWithFilters(lastOptions.value);
   }
-}
+};
 </script>
 
 <template>
@@ -93,7 +103,7 @@ function retry() {
   <ui-title-card title="Records" class-name="px-0 pb-0 rounded-md">
     <div class="px-4 pb-4">
       <v-text-field
-        v-model="search"
+        v-model="searchInput"
         label="Search records"
         prepend-inner-icon="mdi-magnify"
         variant="outlined"

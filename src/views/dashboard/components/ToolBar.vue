@@ -7,11 +7,11 @@ defineProps<{
 
 const fromDate = defineModel<Date | null>("fromDate", { default: null });
 const toDate = defineModel<Date | null>("toDate", { default: null });
-const selectedRegion = defineModel<string | null>("selectedRegion", {
-  default: null,
+const selectedRegion = defineModel<string[]>("selectedRegion", {
+  default: () => [],
 });
-const selectedStatus = defineModel<string | null>("selectedStatus", {
-  default: null,
+const selectedStatus = defineModel<string[]>("selectedStatus", {
+  default: () => [],
 });
 
 const emit = defineEmits<{
@@ -66,6 +66,9 @@ const emit = defineEmits<{
             :items="regions"
             item-title="name"
             item-value="name"
+            multiple
+            chips
+            closable-chips
             hide-details="auto"
           ></v-select>
         </v-col>
@@ -76,6 +79,9 @@ const emit = defineEmits<{
             variant="outlined"
             density="compact"
             :items="['Pending', 'Processing', 'Completed', 'Rejected']"
+            multiple
+            chips
+            closable-chips
             hide-details="auto"
           ></v-select>
         </v-col>

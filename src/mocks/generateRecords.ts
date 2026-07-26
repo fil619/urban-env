@@ -15,15 +15,15 @@ export const regions = [
   { id: 6, name: "Africa" },
 ];
 
-const statuses = ["completed", "processing", "pending"];
+export const statuses = ["completed", "processing", "pending"];
 
-function randomDateBetween(start: Date, end: Date) {
+const randomDateBetween = (start: Date, end: Date) => {
   return new Date(
     start.getTime() + Math.random() * (end.getTime() - start.getTime()),
   );
-}
+};
 
-function generateRecords(count = 300) {
+const generateRecords = (count = 300) => {
   return Array.from({ length: count }, (_, index) => {
     const date = randomDateBetween(
       new Date(2026, 0, 1),
@@ -42,6 +42,6 @@ function generateRecords(count = 300) {
       status: statuses[index % statuses.length],
     };
   });
-}
+};
 
 export const records = generateRecords(200);

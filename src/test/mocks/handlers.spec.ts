@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { records, regions } from "@/mocks/generateRecords";
+import { businessUnits, records, regions, statuses } from "@/mocks/generateRecords";
 
 describe("mock API handlers", () => {
   it("GET /api/records paginates results", async () => {
@@ -29,6 +29,24 @@ describe("mock API handlers", () => {
     for (const item of body.items) {
       expect(item.region).toBe(target.region);
       expect(item.status).toBe(target.status);
+    }
+  });
+
+  it("GET /api/records filters by multiple regions and statuses", async () => {
+    const [first, second] = records;
+    const params = new URLSearchParams({ page: "1", itemsPerPage: "-1" });
+    params.append("region", first.region);
+    params.append("region", second.region);
+    params.append("status", first.status);
+    params.append("status", second.status);
+
+    const res = await fetch(`/api/records?${params.toString()}`);
+    const body = await res.json();
+
+    expect(body.items.length).toBeGreaterThan(0);
+    for (const item of body.items) {
+      expect([first.region, second.region]).toContain(item.region);
+      expect([first.status, second.status]).toContain(item.status);
     }
   });
 
@@ -90,6 +108,43 @@ describe("mock API handlers", () => {
 
     expect(body.labels.length).toBe(body.data.length);
     expect(body.labels.length).toBeGreaterThan(0);
+  });
+
+  it("GET /api/dashboard/revenue-by-business-unit returns one entry per business unit", async () => {
+    const res = await fetch("/api/dashboard/revenue-by-business-unit");
+    const body = await res.json();
+
+    expect(body.labels).toEqual(businessUnits.map((u) => u.name));
+    expect(body.data).toHaveLength(businessUnits.length);
+  });
+
+  it("GET /api/dashboard/order-status returns one count per status", async () => {
+    const res = await fetch("/api/dashboard/order-status");
+    const body = await res.json();
+
+    expect(body.labels).toEqual(
+      statuses.map((s) => s.charAt(0).toUpperCase() + s.slice(1)),
+    );
+    expect(body.data).toHaveLength(statuses.length);
+    expect(body.data.reduce((sum: number, n: number) => sum + n, 0)).toBe(
+      records.length,
+    );
+  });
+
+  it("GET /api/dashboard/order-status filters by region", async () => {
+    const target = records[0];
+    const res = await fetch(
+      `/api/dashboard/order-status?region=${encodeURIComponent(target.region)}`,
+    );
+    const body = await res.json();
+
+    const expectedTotal = records.filter(
+      (record) => record.region === target.region,
+    ).length;
+
+    expect(body.data.reduce((sum: number, n: number) => sum + n, 0)).toBe(
+      expectedTotal,
+    );
   });
 
   it("GET /api/notifications returns a notification list", async () => {

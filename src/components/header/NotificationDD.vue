@@ -3,9 +3,9 @@ import { useNotificationsStore } from "@/stores/notifications";
 
 const notificationsStore = useNotificationsStore();
 
-function deactivateItem() {
+const deactivateItem = () => {
   notificationsStore.markAllRead();
-}
+};
 </script>
 
 <template>

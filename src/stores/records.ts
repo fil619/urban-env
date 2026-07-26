@@ -19,8 +19,8 @@ interface RecordsQuery {
   search: string;
   fromDate?: Date | null;
   toDate?: Date | null;
-  region?: string | null;
-  status?: string | null;
+  region?: string[] | null;
+  status?: string[] | null;
 }
 
 export const useRecordsStore = defineStore("records", () => {
@@ -61,11 +61,15 @@ export const useRecordsStore = defineStore("records", () => {
         }
 
         if (query.region) {
-          params.set("region", query.region);
+          for (const region of query.region) {
+            params.append("region", region);
+          }
         }
 
         if (query.status) {
-          params.set("status", query.status);
+          for (const status of query.status) {
+            params.append("status", status);
+          }
         }
 
         const sort = query.sortBy[0];

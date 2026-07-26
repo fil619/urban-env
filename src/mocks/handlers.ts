@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { records, regions } from "./generateRecords";
+import { businessUnits, records, regions, statuses } from "./generateRecords";
 
 const MONTH_NAMES = [
   "Jan",
@@ -19,15 +19,15 @@ const MONTH_NAMES = [
 const DATA_START_MONTH = new Date(2026, 0, 1);
 const DATA_END_MONTH = new Date(2026, 11, 1);
 
-function parseRevenue(revenue: string) {
+const parseRevenue = (revenue: string) => {
   return Number(revenue.replace(/[£,]/g, ""));
-}
+};
 
-function monthLabel(date: Date) {
+const monthLabel = (date: Date) => {
   return `${MONTH_NAMES[date.getMonth()]} ${date.getFullYear()}`;
-}
+};
 
-function getMonthRange(url: URL) {
+const getMonthRange = (url: URL) => {
   const fromDate = url.searchParams.get("fromDate");
   const toDate = url.searchParams.get("toDate");
 
@@ -50,7 +50,7 @@ function getMonthRange(url: URL) {
   }
 
   return months;
-}
+};
 
 const notifications = [
   {
@@ -93,16 +93,16 @@ const notifications = [
 
 type RecordItem = (typeof records)[number];
 
-function parseGbDate(value: string) {
+const parseGbDate = (value: string) => {
   const [day, month, year] = value.split("/").map(Number);
   return new Date(year, month - 1, day);
-}
+};
 
-function applyRecordFilters(url: URL) {
+const applyRecordFilters = (url: URL) => {
   const fromDate = url.searchParams.get("fromDate");
   const toDate = url.searchParams.get("toDate");
-  const region = url.searchParams.get("region");
-  const status = url.searchParams.get("status");
+  const regionFilters = url.searchParams.getAll("region");
+  const statusFilters = url.searchParams.getAll("status");
 
   let result = records;
 
@@ -116,18 +116,19 @@ function applyRecordFilters(url: URL) {
     result = result.filter((record) => parseGbDate(record.date) <= to);
   }
 
-  if (region) {
-    result = result.filter((record) => record.region === region);
+  if (regionFilters.length > 0) {
+    result = result.filter((record) => regionFilters.includes(record.region));
   }
 
-  if (status) {
-    result = result.filter((record) => record.status === status.toLowerCase());
+  if (statusFilters.length > 0) {
+    const lowered = statusFilters.map((status) => status.toLowerCase());
+    result = result.filter((record) => lowered.includes(record.status));
   }
 
   return result;
-}
+};
 
-function computeKpis(url: URL) {
+const computeKpis = (url: URL) => {
   const filtered = applyRecordFilters(url);
 
   const totalRevenue = filtered.reduce(
@@ -161,7 +162,7 @@ function computeKpis(url: URL) {
       icon: "mdi-trending-up",
     },
     {
-      name: "Active Business Units",
+      name: "Active Customers",
       earn: String(activeBusinessUnits),
       percent: "70.5%",
       color: "success",
@@ -175,14 +176,14 @@ function computeKpis(url: URL) {
       icon: "mdi-trending-down",
     },
     {
-      name: "Completion Rate",
+      name: "Conversion Rate",
       earn: `${completionRate}%`,
       percent: "27.4%",
       color: "error",
       icon: "mdi-trending-down",
     },
   ];
-}
+};
 
 export const handlers = [
   http.get("/api/dashboard/kpis", ({ request }) => {
@@ -223,6 +224,38 @@ export const handlers = [
     );
 
     return HttpResponse.json({ labels: regions.map((r) => r.name), data });
+  }),
+  http.get("/api/dashboard/revenue-by-business-unit", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+
+    const data = businessUnits.map((unit) =>
+      Math.round(
+        filtered
+          .filter((record) => record.businessUnit === unit.name)
+          .reduce((sum, record) => sum + parseRevenue(record.revenue), 0),
+      ),
+    );
+
+    return HttpResponse.json({
+      labels: businessUnits.map((u) => u.name),
+      data,
+    });
+  }),
+  http.get("/api/dashboard/order-status", ({ request }) => {
+    const url = new URL(request.url);
+    const filtered = applyRecordFilters(url);
+
+    const data = statuses.map(
+      (status) => filtered.filter((record) => record.status === status).length,
+    );
+
+    return HttpResponse.json({
+      labels: statuses.map(
+        (status) => status.charAt(0).toUpperCase() + status.slice(1),
+      ),
+      data,
+    });
   }),
   http.get("/api/records/recent", ({ request }) => {
     const url = new URL(request.url);

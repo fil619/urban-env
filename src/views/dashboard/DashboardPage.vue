@@ -4,6 +4,8 @@ import ToolBar from "./components/ToolBar.vue";
 import WidgetFive from "./components/WidgetFive.vue";
 import RevenueTrend from "./components/RevenueTrend.vue";
 import RevenueRegion from "./components/RevenueRegion.vue";
+import RevenueBusinessUnit from "./components/RevenueBusinessUnit.vue";
+import OrderStatus from "./components/OrderStatus.vue";
 import RecentOrder from "./components/RecentOrder.vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
@@ -11,39 +13,38 @@ const dashboardStore = useDashboardStore();
 
 const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
-const selectedRegion = ref<string | null>(null);
-const selectedStatus = ref<string | null>(null);
+const selectedRegion = ref<string[]>([]);
+const selectedStatus = ref<string[]>([]);
 const regions = ref<{ id: number; name: string }[]>([]);
 
 const noFiltersSelected = computed(
   () =>
     !fromDate.value &&
     !toDate.value &&
-    !selectedRegion.value &&
-    !selectedStatus.value,
+    selectedRegion.value.length === 0 &&
+    selectedStatus.value.length === 0,
 );
 
 const dateRangeInvalid = computed(
-  () =>
-    !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
+  () => !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
 );
 
-function applyFilters() {
+const applyFilters = () => {
   dashboardStore.fetchFilteredData({
     fromDate: fromDate.value,
     toDate: toDate.value,
     region: selectedRegion.value,
     status: selectedStatus.value,
   });
-}
+};
 
-function clearFilters() {
+const clearFilters = () => {
   fromDate.value = null;
   toDate.value = null;
-  selectedRegion.value = null;
-  selectedStatus.value = null;
+  selectedRegion.value = [];
+  selectedStatus.value = [];
   dashboardStore.fetchFilteredData();
-}
+};
 
 onMounted(async () => {
   console.log("DashboardPage mounted");
@@ -96,6 +97,10 @@ onMounted(async () => {
     <div class="flex flex-col md:flex-row gap-4 mt-5">
       <revenue-trend />
       <revenue-region />
+    </div>
+    <div class="flex flex-col md:flex-row gap-4 mt-5">
+      <revenue-business-unit />
+      <order-status />
     </div>
     <recent-order class="mt-5" />
   </div>

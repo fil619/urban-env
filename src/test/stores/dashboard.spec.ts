@@ -19,6 +19,12 @@ describe("useDashboardStore", () => {
     expect(store.revenueTrend.length).toBeGreaterThan(0);
     expect(store.revenueTrendLabels.length).toBe(store.revenueTrend.length);
     expect(store.revenueByRegion.length).toBeGreaterThan(0);
+    expect(store.revenueByBusinessUnit.length).toBeGreaterThan(0);
+    expect(store.revenueByBusinessUnitLabels.length).toBe(
+      store.revenueByBusinessUnit.length,
+    );
+    expect(store.orderStatus.length).toBeGreaterThan(0);
+    expect(store.orderStatusLabels.length).toBe(store.orderStatus.length);
     expect(store.recentRecords.length).toBeGreaterThan(0);
   });
 
@@ -59,14 +65,17 @@ describe("useDashboardStore", () => {
     await store.fetchFilteredData({
       fromDate: new Date(2026, 0, 1),
       toDate: new Date(2026, 5, 1),
-      region: "Europe",
-      status: "Completed",
+      region: ["Europe", "Asia Pacific"],
+      status: ["Completed"],
     });
 
     expect(store.error).toBeNull();
     expect(store.recentRecords).toEqual([]);
-    expect(captured.url?.searchParams.get("region")).toBe("Europe");
-    expect(captured.url?.searchParams.get("status")).toBe("Completed");
+    expect(captured.url?.searchParams.getAll("region")).toEqual([
+      "Europe",
+      "Asia Pacific",
+    ]);
+    expect(captured.url?.searchParams.getAll("status")).toEqual(["Completed"]);
     expect(captured.url?.searchParams.get("fromDate")).toBeTruthy();
     expect(captured.url?.searchParams.get("toDate")).toBeTruthy();
   });
@@ -97,7 +106,7 @@ describe("useDashboardStore", () => {
 
     const store = useDashboardStore();
     await store.fetchDashboardData();
-    await store.fetchFilteredData({ region: "Europe" });
+    await store.fetchFilteredData({ region: ["Europe"] });
 
     expect(store.error).toContain("failed");
   });
