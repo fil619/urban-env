@@ -99,7 +99,7 @@ const statusLabel = (status: string): string => {
           v-for="{ raw: item } in items"
           :key="item.date"
           variant="outlined"
-          class="mx-4 mb-3"
+          class="mb-3"
         >
           <v-card-text>
             <div class="d-flex align-center justify-space-between mb-2">

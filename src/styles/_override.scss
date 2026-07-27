@@ -18,6 +18,45 @@
   opacity: 1;
 }
 
+// Buttons and fields don't set a color prop, so their focus indicators
+// default to currentColor (near-black/grey). Force both to the theme's
+// primary blue so focus state reads consistently across all controls.
+.v-btn:focus-visible::after {
+  color: rgb(var(--v-theme-primary));
+}
+
+.v-field--focused .v-field__outline {
+  color: rgb(var(--v-theme-primary));
+}
+
+// Sortable data-table headers get the browser's default focus outline
+// (currentColor, i.e. grey against the header's muted text). Match it
+// to the same blue used above.
+.v-data-table__th--sortable:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: -2px;
+}
+
+// ApexCharts' SVG canvas is focusable and falls back to the browser's
+// default currentColor outline too.
+.apexcharts-svg:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+
+// router-link renders a plain <a>, which also falls back to the
+// browser's default currentColor outline.
+a:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 2px;
+}
+
+// The sidebar drawer clips overflow, so an outward-offset outline on its
+// nav links gets cropped at the drawer edge. Draw it inset instead.
+.leftSidebar a:focus-visible {
+  outline-offset: -2px;
+}
+
 .skip-link {
   position: absolute;
   top: -40px;
