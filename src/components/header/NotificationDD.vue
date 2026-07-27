@@ -140,10 +140,6 @@ onMounted(() => {
           </template>
         </v-list>
       </div>
-      <v-divider></v-divider>
-      <div class="pa-2 text-center">
-        <v-btn color="primary" variant="text">View All</v-btn>
-      </div>
     </v-sheet>
   </v-menu>
 </template>
