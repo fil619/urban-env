@@ -79,6 +79,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const error = ref<string | null>(null);
   const filtering = ref(false);
   let fetchPromise: Promise<void> | null = null;
+  let latestFilterRequestId = 0;
 
   const fetchDashboardData = (): Promise<void> => {
     if (loaded.value) return Promise.resolve();
@@ -168,6 +169,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
 
     error.value = null;
     filtering.value = true;
+    const requestId = ++latestFilterRequestId;
 
     try {
       const [
@@ -203,8 +205,12 @@ export const useDashboardStore = defineStore("dashboard", () => {
       const revenueByBusinessUnitJson = await revenueByBusinessUnitRes.json();
       const orderStatusJson = await orderStatusRes.json();
       const revenueTrendJson = await revenueTrendRes.json();
+      const recentJson = await recentRes.json();
+      const kpisJson = await kpisRes.json();
 
-      recentRecords.value = await recentRes.json();
+      if (requestId !== latestFilterRequestId) return;
+
+      recentRecords.value = recentJson;
       revenueByRegion.value = revenueByRegionJson.data;
       revenueByRegionLabels.value = revenueByRegionJson.labels;
       revenueByBusinessUnit.value = revenueByBusinessUnitJson.data;
@@ -213,12 +219,16 @@ export const useDashboardStore = defineStore("dashboard", () => {
       orderStatusLabels.value = orderStatusJson.labels;
       revenueTrend.value = revenueTrendJson.data;
       revenueTrendLabels.value = revenueTrendJson.labels;
-      kpis.value = await kpisRes.json();
+      kpis.value = kpisJson;
     } catch (err) {
-      error.value =
-        err instanceof Error ? err.message : "Failed to load records";
+      if (requestId === latestFilterRequestId) {
+        error.value =
+          err instanceof Error ? err.message : "Failed to load records";
+      }
     } finally {
-      filtering.value = false;
+      if (requestId === latestFilterRequestId) {
+        filtering.value = false;
+      }
     }
   };
 
