@@ -2,14 +2,10 @@ import { ref } from "vue";
 
 import { defineStore } from "pinia";
 
-interface RecordItem {
+import type { RecordItem as DashboardRecordItem } from "@/stores/dashboard";
+
+interface RecordItem extends DashboardRecordItem {
   id: number;
-  date: string;
-  businessUnit: string;
-  region: string;
-  revenue: string;
-  transactions: number;
-  status: string;
 }
 
 interface RecordsQuery {
@@ -31,6 +27,7 @@ export const useRecordsStore = defineStore("records", () => {
   let lastQueryKey: string | null = null;
   let pendingQueryKey: string | null = null;
   let pendingPromise: Promise<void> | null = null;
+  let latestRequestId = 0;
 
   const fetchRecords = (query: RecordsQuery): Promise<void> => {
     const queryKey = JSON.stringify(query);
@@ -40,6 +37,7 @@ export const useRecordsStore = defineStore("records", () => {
     loading.value = true;
     error.value = null;
     pendingQueryKey = queryKey;
+    const requestId = ++latestRequestId;
 
     pendingPromise = (async (): Promise<void> => {
       try {
@@ -87,16 +85,24 @@ export const useRecordsStore = defineStore("records", () => {
 
         const data = await response.json();
 
+        if (requestId !== latestRequestId) return;
+
         items.value = data.items;
         total.value = data.total;
         lastQueryKey = queryKey;
       } catch (err) {
-        error.value =
-          err instanceof Error ? err.message : "Failed to load records";
+        if (requestId === latestRequestId) {
+          error.value =
+            err instanceof Error ? err.message : "Failed to load records";
+        }
       } finally {
-        loading.value = false;
-        pendingQueryKey = null;
-        pendingPromise = null;
+        if (requestId === latestRequestId) {
+          loading.value = false;
+        }
+        if (pendingQueryKey === queryKey) {
+          pendingQueryKey = null;
+          pendingPromise = null;
+        }
       }
     })();
 

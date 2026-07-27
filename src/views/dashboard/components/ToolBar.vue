@@ -3,6 +3,7 @@ defineProps<{
   regions: { id: number; name: string }[];
   noFiltersSelected: boolean;
   dateRangeInvalid: boolean;
+  loading?: boolean;
 }>();
 
 const fromDate = defineModel<Date | null>("fromDate", { default: null });
@@ -88,10 +89,13 @@ const emit = defineEmits<{
       </v-row>
       <v-row>
         <v-col cols="12" class="d-flex justify-end ga-2">
-          <v-btn variant="outlined" @click="emit('clear')">Clear</v-btn>
+          <v-btn variant="outlined" :disabled="loading" @click="emit('clear')"
+            >Clear</v-btn
+          >
           <v-btn
             color="primary"
-            :disabled="noFiltersSelected || dateRangeInvalid"
+            :loading="loading"
+            :disabled="noFiltersSelected || dateRangeInvalid || loading"
             @click="emit('apply')"
           >
             Apply

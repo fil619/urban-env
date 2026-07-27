@@ -96,6 +96,7 @@ const retry = (): void => {
       :regions="dashboardStore.regions"
       :no-filters-selected="noFiltersSelected"
       :date-range-invalid="dateRangeInvalid"
+      :loading="recordsStore.loading"
       @apply="refetchWithFilters"
       @clear="refetchWithFilters"
     />

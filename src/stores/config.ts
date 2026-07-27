@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 import { defineStore } from "pinia";
 
-export const useConfigStore = defineStore("customizer", () => {
+export const useConfigStore = defineStore("config", () => {
   const sidebar = ref(true);
   const miniSidebar = ref(false);
 

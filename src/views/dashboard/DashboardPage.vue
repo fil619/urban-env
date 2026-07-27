@@ -62,6 +62,7 @@ onMounted(() => {
         :regions="dashboardStore.regions"
         :no-filters-selected="noFiltersSelected"
         :date-range-invalid="dateRangeInvalid"
+        :loading="dashboardStore.filtering"
         @apply="applyFilters"
         @clear="clearFilters"
       />
