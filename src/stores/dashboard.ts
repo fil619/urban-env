@@ -27,7 +27,44 @@ interface RecentRecordsFilters {
   status?: string[] | null;
 }
 
+export interface Region {
+  id: number;
+  name: string;
+}
+
 export const useDashboardStore = defineStore("dashboard", () => {
+  const regions = ref<Region[]>([]);
+  const regionsLoaded = ref(false);
+  const regionsError = ref<string | null>(null);
+  let regionsFetchPromise: Promise<void> | null = null;
+
+  const fetchRegions = (): Promise<void> => {
+    if (regionsLoaded.value) return Promise.resolve();
+    if (regionsFetchPromise) return regionsFetchPromise;
+
+    regionsError.value = null;
+
+    regionsFetchPromise = (async (): Promise<void> => {
+      try {
+        const response = await fetch("/api/regions");
+        if (!response.ok) {
+          throw new Error(
+            `Request to ${response.url} failed (${response.status})`,
+          );
+        }
+        regions.value = await response.json();
+        regionsLoaded.value = true;
+      } catch (err) {
+        regionsError.value =
+          err instanceof Error ? err.message : "Failed to load regions";
+      } finally {
+        regionsFetchPromise = null;
+      }
+    })();
+
+    return regionsFetchPromise;
+  };
+
   const kpis = ref<KpiCard[]>([]);
   const revenueTrend = ref<number[]>([]);
   const revenueTrendLabels = ref<string[]>([]);
@@ -181,9 +218,11 @@ export const useDashboardStore = defineStore("dashboard", () => {
     }
   };
 
-  void fetchDashboardData();
-
   return {
+    regions,
+    regionsLoaded,
+    regionsError,
+    fetchRegions,
     kpis,
     revenueTrend,
     revenueTrendLabels,
