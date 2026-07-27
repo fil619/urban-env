@@ -119,4 +119,10 @@ improve once the app talks to a real backend instead of mocks.
 
 <img width="1919" height="916" alt="image" src="https://github.com/user-attachments/assets/a23a4eed-3e61-4124-8942-a607c5ac9f20" />
 
+## Further Improvements
 
+- **Storybook.** Isolated component development/documentation, decoupled
+  from the app's routes and stores.
+- **Pre-commit hooks.** Husky + lint-staged to run lint/format/type-check on
+  staged files before a commit lands, instead of relying on CI or review to
+  catch it.
