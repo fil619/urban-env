@@ -46,4 +46,38 @@ describe("RecentOrder", () => {
     expect(text).toContain("Processing");
     expect(text).toContain("Pending");
   });
+
+  it("renders records as cards instead of a table on mobile", () => {
+    const records: RecordItem[] = [
+      {
+        date: "01/01/2026",
+        businessUnit: "Retail Banking",
+        region: "Europe",
+        revenue: "£1,000",
+        transactions: 5,
+        status: "completed",
+      },
+    ];
+
+    const wrapper = mount(RecentOrder, {
+      props: { records },
+      global: {
+        plugins: [
+          vuetify,
+          {
+            install(app) {
+              app.config.globalProperties.$vuetify.display.mobile = true;
+            },
+          },
+        ],
+        stubs: { RouterLink: true },
+      },
+    });
+
+    expect(wrapper.findComponent({ name: "VDataIterator" }).exists()).toBe(
+      true,
+    );
+    expect(wrapper.findComponent({ name: "VTable" }).exists()).toBe(false);
+    expect(wrapper.text()).toContain("Retail Banking");
+  });
 });
