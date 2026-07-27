@@ -15,7 +15,6 @@ const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string[]>([]);
 const selectedStatus = ref<string[]>([]);
-const regions = ref<{ id: number; name: string }[]>([]);
 
 const noFiltersSelected = computed(
   () =>
@@ -46,10 +45,9 @@ const clearFilters = (): void => {
   void dashboardStore.fetchFilteredData();
 };
 
-onMounted(async () => {
-  console.log("DashboardPage mounted");
-  const response = await fetch("/api/regions");
-  regions.value = await response.json();
+onMounted(() => {
+  void dashboardStore.fetchDashboardData();
+  void dashboardStore.fetchRegions();
 });
 </script>
 
@@ -61,7 +59,7 @@ onMounted(async () => {
         v-model:to-date="toDate"
         v-model:selected-region="selectedRegion"
         v-model:selected-status="selectedStatus"
-        :regions="regions"
+        :regions="dashboardStore.regions"
         :no-filters-selected="noFiltersSelected"
         :date-range-invalid="dateRangeInvalid"
         @apply="applyFilters"

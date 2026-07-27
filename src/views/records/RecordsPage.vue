@@ -4,6 +4,7 @@ import { computed, onMounted, ref, watch } from "vue";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 import ToolBar from "@/views/dashboard/components/ToolBar.vue";
 import { useRecordsStore } from "@/stores/records";
+import { useDashboardStore } from "@/stores/dashboard";
 
 interface DataTableOptions {
   page: number;
@@ -13,6 +14,7 @@ interface DataTableOptions {
 }
 
 const recordsStore = useRecordsStore();
+const dashboardStore = useDashboardStore();
 const search = ref("");
 const searchInput = ref("");
 const lastOptions = ref<DataTableOptions | null>(null);
@@ -30,7 +32,6 @@ const fromDate = ref<Date | null>(null);
 const toDate = ref<Date | null>(null);
 const selectedRegion = ref<string[]>([]);
 const selectedStatus = ref<string[]>([]);
-const regions = ref<{ id: number; name: string }[]>([]);
 
 const noFiltersSelected = computed(
   () =>
@@ -44,9 +45,8 @@ const dateRangeInvalid = computed(
   () => !!fromDate.value && !!toDate.value && fromDate.value > toDate.value,
 );
 
-onMounted(async () => {
-  const response = await fetch("/api/regions");
-  regions.value = await response.json();
+onMounted(() => {
+  void dashboardStore.fetchRegions();
 });
 
 const headers = [
@@ -93,7 +93,7 @@ const retry = (): void => {
       v-model:to-date="toDate"
       v-model:selected-region="selectedRegion"
       v-model:selected-status="selectedStatus"
-      :regions="regions"
+      :regions="dashboardStore.regions"
       :no-filters-selected="noFiltersSelected"
       :date-range-invalid="dateRangeInvalid"
       @apply="refetchWithFilters"

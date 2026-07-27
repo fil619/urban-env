@@ -50,8 +50,6 @@ export const useNotificationsStore = defineStore("notifications", () => {
     isActive.value = false;
   };
 
-  void fetchNotifications();
-
   return {
     notifications,
     isActive,
