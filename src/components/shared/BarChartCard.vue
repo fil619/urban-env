@@ -4,6 +4,7 @@ import { useTheme } from "vuetify";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
 
 const props = defineProps<{
+  title: string;
   labels: string[];
   series: number[];
 }>();
@@ -70,10 +71,7 @@ const barChart1 = computed(() => ({
 </script>
 
 <template>
-  <ui-title-card
-    title="Revenue by Business Unit"
-    class-name="pt-5 px-0 rounded-md overflow-hidden"
-  >
+  <ui-title-card :title="title" class-name="pt-5 px-0 rounded-md overflow-hidden">
     <apexchart
       type="bar"
       height="400"

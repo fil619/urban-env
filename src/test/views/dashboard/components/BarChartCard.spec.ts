@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { mountWithPlugins } from "@/test/mountWithPlugins";
-import RevenueRegion from "@/views/dashboard/components/RevenueRegion.vue";
+import BarChartCard from "@/views/dashboard/components/BarChartCard.vue";
 
 const apexchartStub = {
   name: "ApexchartStub",
@@ -8,20 +8,33 @@ const apexchartStub = {
   template: "<div/>",
 };
 
-const props = { labels: ["Europe", "Asia Pacific"], series: [100, 200] };
+const props = {
+  title: "Revenue by Region",
+  labels: ["Europe", "Asia Pacific"],
+  series: [100, 200],
+};
 
-describe("RevenueRegion", () => {
+describe("BarChartCard", () => {
   it("mounts without throwing", () => {
     expect(() =>
-      mountWithPlugins(RevenueRegion, {
+      mountWithPlugins(BarChartCard, {
         props,
         global: { stubs: { apexchart: apexchartStub } },
       }),
     ).not.toThrow();
   });
 
+  it("renders the given title", () => {
+    const wrapper = mountWithPlugins(BarChartCard, {
+      props,
+      global: { stubs: { apexchart: apexchartStub } },
+    });
+
+    expect(wrapper.text()).toContain("Revenue by Region");
+  });
+
   it("passes chart options with the expected foreColor, colors, tooltip formatter, and labels", () => {
-    const wrapper = mountWithPlugins(RevenueRegion, {
+    const wrapper = mountWithPlugins(BarChartCard, {
       props,
       global: { stubs: { apexchart: apexchartStub } },
     });
@@ -31,8 +44,6 @@ describe("RevenueRegion", () => {
 
     const options = chart.props("options") as any;
 
-    // Note: unlike RevenueTrend, this component hardcodes foreColor rather than
-    // deriving it from the theme.
     expect(options.chart.foreColor).toBe("#a1aab2");
 
     expect(options.colors).toHaveLength(1);

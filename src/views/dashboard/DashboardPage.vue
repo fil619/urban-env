@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from "vue";
-import ToolBar from "./components/ToolBar.vue";
-import WidgetFive from "./components/WidgetFive.vue";
-import RevenueTrend from "./components/RevenueTrend.vue";
-import RevenueRegion from "./components/RevenueRegion.vue";
-import RevenueBusinessUnit from "./components/RevenueBusinessUnit.vue";
-import OrderStatus from "./components/OrderStatus.vue";
-import RecentOrder from "./components/RecentOrder.vue";
+import ToolBar from "@/views/dashboard/components/ToolBar.vue";
+import WidgetFive from "@/views/dashboard/components/WidgetFive.vue";
+import RevenueTrend from "@/views/dashboard/components/RevenueTrend.vue";
+import BarChartCard from "@/components/shared/BarChartCard.vue";
+import OrderStatus from "@/views/dashboard/components/OrderStatus.vue";
+import RecentOrder from "@/views/dashboard/components/RecentOrder.vue";
 import { useDashboardStore } from "@/stores/dashboard";
 
 const dashboardStore = useDashboardStore();
@@ -98,13 +97,15 @@ onMounted(() => {
         :labels="dashboardStore.revenueTrendLabels"
         :series="dashboardStore.revenueTrend"
       />
-      <revenue-region
+      <bar-chart-card
+        title="Revenue by Region"
         :labels="dashboardStore.revenueByRegionLabels"
         :series="dashboardStore.revenueByRegion"
       />
     </div>
     <div class="flex flex-col md:flex-row gap-4 mt-5">
-      <revenue-business-unit
+      <bar-chart-card
+        title="Revenue by Business Unit"
         :labels="dashboardStore.revenueByBusinessUnitLabels"
         :series="dashboardStore.revenueByBusinessUnit"
       />
