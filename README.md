@@ -88,12 +88,7 @@ src/
 - **Domain-scoped Pinia stores.** State is split by domain (`dashboard`,
   `records`, `notifications`, `config`) instead of one global store, so each
   store's data and loading/error state stay independent.
-- **Request de-duplication and staleness guards.** Stores tag each fetch with a
-  request ID keyed by its query, so an unchanged query doesn't re-fetch and a
-  slow, stale response can't clobber a newer one when filters change quickly.
-- **Debounced search.** The records search input debounces 500ms before
-  triggering a request, instead of firing one per keystroke.
-- **Colocated tests.** `src/test/` mirrors `src/`, one spec per
+- **Unit tests.** `src/test/` mirrors `src/`, one spec per
   component/store, with a shared `mountWithPlugins` helper for setup.
 - **Naming conventions.** PascalCase component files, camelCase variables/
   functions, kebab-case component tags in templates (`<router-link>`,
