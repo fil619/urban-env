@@ -1,17 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
-import { createPinia, setActivePinia } from "pinia";
 import vuetify from "@/plugins/vuetify";
-import { useDashboardStore } from "@/stores/dashboard";
+import type { RecordItem } from "@/stores/dashboard";
 import RecentOrder from "@/views/dashboard/components/RecentOrder.vue";
 
 describe("RecentOrder", () => {
   it("renders the correct status label for completed, processing, and other statuses", () => {
-    const pinia = createPinia();
-    setActivePinia(pinia);
-
-    const store = useDashboardStore();
-    store.recentRecords = [
+    const records: RecordItem[] = [
       {
         date: "01/01/2026",
         businessUnit: "Retail Banking",
@@ -39,8 +34,9 @@ describe("RecentOrder", () => {
     ];
 
     const wrapper = mount(RecentOrder, {
+      props: { records },
       global: {
-        plugins: [vuetify, pinia],
+        plugins: [vuetify],
         stubs: { RouterLink: true },
       },
     });

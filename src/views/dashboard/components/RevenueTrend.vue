@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useTheme } from "vuetify";
-import { useDashboardStore } from "@/stores/dashboard";
 
-const dashboardStore = useDashboardStore();
+const props = defineProps<{
+  labels: string[];
+  series: number[];
+}>();
 
 const theme = useTheme();
 const primaryColor = theme.current.value.colors.primary;
@@ -19,7 +21,7 @@ const chartOptions1 = computed(() => {
       toolbar: false,
     },
     colors: [primaryColor, darkprimaryColor],
-    labels: dashboardStore.revenueTrendLabels,
+    labels: props.labels,
     dataLabels: {
       enabled: false,
     },
@@ -60,7 +62,7 @@ const chartOptions1 = computed(() => {
 });
 
 const areaChart1 = computed(() => ({
-  series: [{ name: "Revenue", data: dashboardStore.revenueTrend }],
+  series: [{ name: "Revenue", data: props.series }],
 }));
 </script>
 

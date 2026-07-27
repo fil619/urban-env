@@ -8,10 +8,13 @@ const apexchartStub = {
   template: "<div/>",
 };
 
+const props = { labels: ["Retail Banking", "Insurance"], series: [100, 200] };
+
 describe("RevenueBusinessUnit", () => {
   it("mounts without throwing", () => {
     expect(() =>
       mountWithPlugins(RevenueBusinessUnit, {
+        props,
         global: { stubs: { apexchart: apexchartStub } },
       }),
     ).not.toThrow();
@@ -19,6 +22,7 @@ describe("RevenueBusinessUnit", () => {
 
   it("passes chart options with the expected foreColor, colors, tooltip formatter, and labels", () => {
     const wrapper = mountWithPlugins(RevenueBusinessUnit, {
+      props,
       global: { stubs: { apexchart: apexchartStub } },
     });
 

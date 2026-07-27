@@ -91,17 +91,29 @@ onMounted(async () => {
       <v-card-item class="pb-2 px-0 pt-0">
         <v-card-title class="text-h5">Performance Overview</v-card-title>
       </v-card-item>
-      <widget-five />
+      <widget-five :kpis="dashboardStore.kpis" />
     </v-card>
 
     <div class="flex flex-col md:flex-row gap-4 mt-5">
-      <revenue-trend />
-      <revenue-region />
+      <revenue-trend
+        :labels="dashboardStore.revenueTrendLabels"
+        :series="dashboardStore.revenueTrend"
+      />
+      <revenue-region
+        :labels="dashboardStore.revenueByRegionLabels"
+        :series="dashboardStore.revenueByRegion"
+      />
     </div>
     <div class="flex flex-col md:flex-row gap-4 mt-5">
-      <revenue-business-unit />
-      <order-status />
+      <revenue-business-unit
+        :labels="dashboardStore.revenueByBusinessUnitLabels"
+        :series="dashboardStore.revenueByBusinessUnit"
+      />
+      <order-status
+        :labels="dashboardStore.orderStatusLabels"
+        :series="dashboardStore.orderStatus"
+      />
     </div>
-    <recent-order class="mt-5" />
+    <recent-order :records="dashboardStore.recentRecords" class="mt-5" />
   </div>
 </template>

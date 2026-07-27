@@ -2,11 +2,14 @@
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
-import { useDashboardStore } from "@/stores/dashboard";
+
+const props = defineProps<{
+  labels: string[];
+  series: number[];
+}>();
 
 const theme = useTheme();
 const primaryColor = theme.current.value.colors.primary;
-const dashboardStore = useDashboardStore();
 
 const chartOptions1 = computed(() => {
   return {
@@ -28,7 +31,7 @@ const chartOptions1 = computed(() => {
         borderRadius: 4,
       },
     },
-    labels: dashboardStore.revenueByRegionLabels,
+    labels: props.labels,
     colors: [primaryColor],
     stroke: {
       curve: "smooth",
@@ -62,7 +65,7 @@ const chartOptions1 = computed(() => {
 });
 
 const barChart1 = computed(() => ({
-  series: [{ name: "Revenue", data: dashboardStore.revenueByRegion }],
+  series: [{ name: "Revenue", data: props.series }],
 }));
 </script>
 

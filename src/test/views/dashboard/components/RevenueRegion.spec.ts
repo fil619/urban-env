@@ -8,10 +8,13 @@ const apexchartStub = {
   template: "<div/>",
 };
 
+const props = { labels: ["Europe", "Asia Pacific"], series: [100, 200] };
+
 describe("RevenueRegion", () => {
   it("mounts without throwing", () => {
     expect(() =>
       mountWithPlugins(RevenueRegion, {
+        props,
         global: { stubs: { apexchart: apexchartStub } },
       }),
     ).not.toThrow();
@@ -19,6 +22,7 @@ describe("RevenueRegion", () => {
 
   it("passes chart options with the expected foreColor, colors, tooltip formatter, and labels", () => {
     const wrapper = mountWithPlugins(RevenueRegion, {
+      props,
       global: { stubs: { apexchart: apexchartStub } },
     });
 
