@@ -9,7 +9,7 @@ describe("useNotificationsStore", () => {
     setActivePinia(createPinia());
   });
 
-  it("fetches notifications on creation", async () => {
+  it("fetches notifications when fetchNotifications is called", async () => {
     const store = useNotificationsStore();
     await store.fetchNotifications();
 

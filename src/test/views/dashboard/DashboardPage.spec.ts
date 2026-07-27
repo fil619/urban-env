@@ -11,8 +11,7 @@ import { useDashboardStore } from "@/stores/dashboard";
 const stubs = {
   WidgetFive: true,
   RevenueTrend: true,
-  RevenueRegion: true,
-  RevenueBusinessUnit: true,
+  BarChartCard: true,
   OrderStatus: true,
   RecentOrder: true,
 };

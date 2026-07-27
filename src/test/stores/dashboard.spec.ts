@@ -9,7 +9,7 @@ describe("useDashboardStore", () => {
     setActivePinia(createPinia());
   });
 
-  it("loads dashboard data on creation", async () => {
+  it("loads dashboard data when fetchDashboardData is called", async () => {
     const store = useDashboardStore();
     await store.fetchDashboardData();
 
