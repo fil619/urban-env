@@ -102,10 +102,3 @@ Ordered roughly by impact:
   `<ui-title-card>`) to match Vuetify's own `<v-btn>`-style usage.
 - **Vuetify + Tailwind together.** Vuetify for components/theming; Tailwind for
   one-off utility classes where a full Vuetify prop would be overkill.
-
-## Known Limitations
-
-- The mock dataset (`src/mocks/generateRecords.ts`) is generated client-side —
-  there's no real persistence or backend.
-- KPI percentage-change values in `handlers.ts` are placeholder figures, not
-  computed period-over-period deltas.
