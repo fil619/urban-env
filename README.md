@@ -68,35 +68,32 @@ src/
 ## Architecture Decisions
 
 Ordered roughly by impact:
-
-- **Server-side pagination/sorting/filtering.** The records table
-  (`v-data-table-server`) sends paging, sorting, search, and filters to the
-  mock API as query params instead of fetching everything and slicing
-  client-side — only one page of data ever hits the network or memory, so it
-  stays fast as the dataset grows, and it's a drop-in swap for a real backend.
 - **Container / Presentational split.** Pages own all logic (store calls,
   filter/pagination state); child components (`ToolBar.vue`, `RevenueTrend.vue`,
-  etc.) are pure props-in/events-out, with no store access of their own.
+  etc.) are pure props-in/events-out, with no store access of their own. 
+  This makes the components reusable.
+- **Server-side pagination/sorting/filtering.** The records table 
+  sends paging, sorting, search, and filters to the
+  mock API as query params instead of fetching everything and slicing
+  client-side — only one page of data ever hits the network or memory, so it
+  stays fast as the dataset grows.
+- **ESLint enforced strictly.** `typescript-eslint`'s strict rules, project
+  custom rules (`eslint-rules/`), and `oxlint` all run on lint — conventions
+  are settled by a failing lint, not a review comment.
+- **Consistent component shape.** `<script setup lang="ts">` above
+  `<template>`; props/emits use the compile-time macros
+  (`defineProps<{...}>()`, call-signature `defineEmits<{ (e: "x"): void }>()`)
+  instead of runtime option objects.
 - **Domain-scoped Pinia stores.** State is split by domain (`dashboard`,
   `records`, `notifications`, `config`) instead of one global store, so each
   store's data and loading/error state stay independent.
 - **Request de-duplication and staleness guards.** Stores tag each fetch with a
   request ID keyed by its query, so an unchanged query doesn't re-fetch and a
   slow, stale response can't clobber a newer one when filters change quickly.
-- **MSW for the mock API.** Intercepts real `fetch` calls at the network layer
-  (same handlers in the browser and in tests), so the data layer is realistic
-  and HTTP-shaped from the start, with no separate "test mode" path.
 - **Debounced search.** The records search input debounces 500ms before
   triggering a request, instead of firing one per keystroke.
-- **ESLint enforced strictly.** `typescript-eslint`'s strict rules, project
-  custom rules (`eslint-rules/`), and `oxlint` all run on lint — conventions
-  are settled by a failing lint, not a review comment.
 - **Colocated tests.** `src/test/` mirrors `src/`, one spec per
   component/store, with a shared `mountWithPlugins` helper for setup.
-- **Consistent component shape.** `<script setup lang="ts">` above
-  `<template>`; props/emits use the compile-time macros
-  (`defineProps<{...}>()`, call-signature `defineEmits<{ (e: "x"): void }>()`)
-  instead of runtime option objects.
 - **Naming conventions.** PascalCase component files, camelCase variables/
   functions, kebab-case component tags in templates (`<router-link>`,
   `<ui-title-card>`) to match Vuetify's own `<v-btn>`-style usage.
