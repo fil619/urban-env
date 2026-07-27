@@ -111,3 +111,12 @@ carry `aria-label`/`aria-busy`/`role` attributes for screen readers.
 
 <img width="1918" height="916" alt="image" src="https://github.com/user-attachments/assets/a6006cf8-eb97-4e04-bf7c-924512849825" />
 
+### Performance
+
+Local metrics (LCP, CLS, INP) are currently measured against the mock service
+worker, which adds its own request overhead. These numbers are expected to
+improve once the app talks to a real backend instead of mocks.
+
+<img width="1919" height="916" alt="image" src="https://github.com/user-attachments/assets/a23a4eed-3e61-4124-8942-a607c5ac9f20" />
+
+
