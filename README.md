@@ -98,3 +98,11 @@ src/
   `<ui-title-card>`) to match Vuetify's own `<v-btn>`-style usage.
 - **Vuetify + Tailwind together.** Vuetify for components/theming; Tailwind for
   one-off utility classes where a full Vuetify prop would be overkill.
+
+### Accessibility
+
+A skip-link jumps to `#main-content`; every interactive element (buttons,
+fields, sortable table headers, chart SVGs, links) gets a consistent, visible
+`focus-visible` outline instead of relying on inconsistent browser defaults;
+field labels are recolored to meet WCAG AA contrast; nav/notification lists
+carry `aria-label`/`aria-busy`/`role` attributes for screen readers.
