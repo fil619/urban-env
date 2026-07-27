@@ -106,5 +106,8 @@ fields, sortable table headers, chart SVGs, links) gets a consistent, visible
 `focus-visible` outline instead of relying on inconsistent browser defaults;
 field labels are recolored to meet WCAG AA contrast; nav/notification lists
 carry `aria-label`/`aria-busy`/`role` attributes for screen readers.
+
+* The 2 Accessibility issues are know Vuetify issues : https://github.com/vuetifyjs/vuetify/issues/22522
+
 <img width="1918" height="916" alt="image" src="https://github.com/user-attachments/assets/a6006cf8-eb97-4e04-bf7c-924512849825" />
 
