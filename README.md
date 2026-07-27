@@ -95,6 +95,8 @@ src/
   `<ui-title-card>`) to match Vuetify's own `<v-btn>`-style usage.
 - **Vuetify + Tailwind together.** Vuetify for components/theming; Tailwind for
   one-off utility classes where a full Vuetify prop would be overkill.
+- **Chart colors.** pull live from the Vuetify theme,  which keeps chart colors
+  consistent with the rest of the UI and easier to maintain.
 
 ### Accessibility
 
