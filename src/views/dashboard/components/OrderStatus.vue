@@ -2,13 +2,16 @@
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
-import { useDashboardStore } from "@/stores/dashboard";
+
+const props = defineProps<{
+  labels: string[];
+  series: number[];
+}>();
 
 const theme = useTheme();
 const successColor = theme.current.value.colors.success;
 const errorColor = theme.current.value.colors.error;
 const warningColor = theme.current.value.colors.warning;
-const dashboardStore = useDashboardStore();
 
 const chartOptions1 = computed(() => {
   return {
@@ -18,7 +21,7 @@ const chartOptions1 = computed(() => {
       fontFamily: `inherit`,
       foreColor: "rgba(var(--v-theme-secondary), var(--v-high-opacity))",
     },
-    labels: dashboardStore.orderStatusLabels,
+    labels: props.labels,
     colors: [successColor, errorColor, warningColor],
     dataLabels: {
       enabled: false,
@@ -46,7 +49,7 @@ const chartOptions1 = computed(() => {
 });
 
 const donutChart1 = computed(() => ({
-  series: dashboardStore.orderStatus,
+  series: props.series,
 }));
 </script>
 

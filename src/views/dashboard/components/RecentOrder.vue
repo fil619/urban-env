@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import UiTitleCard from "@/components/shared/UiTitleCard.vue";
-import { useDashboardStore } from "@/stores/dashboard";
+import type { RecordItem } from "@/stores/dashboard";
 
-const dashboardStore = useDashboardStore();
+defineProps<{
+  records: RecordItem[];
+}>();
 </script>
 
 <template>
@@ -39,12 +41,12 @@ const dashboardStore = useDashboardStore();
         </tr>
       </thead>
       <tbody>
-        <tr v-if="dashboardStore.recentRecords.length === 0">
+        <tr v-if="records.length === 0">
           <td colspan="6" class="text-center text-medium-emphasis py-8">
             No transactions found
           </td>
         </tr>
-        <tr v-for="item in dashboardStore.recentRecords" :key="item.date">
+        <tr v-for="item in records" :key="item.date">
           <td class="py-3">{{ item.date }}</td>
           <td class="py-3">{{ item.businessUnit }}</td>
           <td class="py-3">{{ item.region }}</td>

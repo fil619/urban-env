@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { useDashboardStore } from "@/stores/dashboard";
+import type { KpiCard } from "@/stores/dashboard";
 
-const dashboardStore = useDashboardStore();
+defineProps<{
+  kpis: KpiCard[];
+}>();
 </script>
 
 <template>
@@ -10,7 +12,7 @@ const dashboardStore = useDashboardStore();
       cols="12"
       sm="6"
       md="3"
-      v-for="(card, i) in dashboardStore.kpis"
+      v-for="(card, i) in kpis"
       :key="i"
       :value="card"
     >

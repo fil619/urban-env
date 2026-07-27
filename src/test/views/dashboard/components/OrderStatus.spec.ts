@@ -8,10 +8,16 @@ const apexchartStub = {
   template: "<div/>",
 };
 
+const props = {
+  labels: ["Completed", "Processing", "Pending"],
+  series: [10, 5, 2],
+};
+
 describe("OrderStatus", () => {
   it("mounts without throwing", () => {
     expect(() =>
       mountWithPlugins(OrderStatus, {
+        props,
         global: { stubs: { apexchart: apexchartStub } },
       }),
     ).not.toThrow();
@@ -19,6 +25,7 @@ describe("OrderStatus", () => {
 
   it("passes donut chart options with one color per status, a tooltip formatter, and labels", () => {
     const wrapper = mountWithPlugins(OrderStatus, {
+      props,
       global: { stubs: { apexchart: apexchartStub } },
     });
 

@@ -2,7 +2,7 @@ import { ref } from "vue";
 
 import { defineStore } from "pinia";
 
-interface KpiCard {
+export interface KpiCard {
   name: string;
   earn: string;
   percent: string;
@@ -11,7 +11,7 @@ interface KpiCard {
   text: string;
 }
 
-interface RecordItem {
+export interface RecordItem {
   date: string;
   businessUnit: string;
   region: string;
