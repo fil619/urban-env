@@ -66,7 +66,9 @@ src/
 ```
 
 ## Architecture Decisions
-
+- **Vite as the build tool.** It's the recommended build tool for Vue apps,
+  that gives near-instant startup and HMR that stays fast as the app grows, 
+  instead of bundling the whole app on every change.
 - **Container / Presentational split.** Pages own all logic (store calls,
   filter/pagination state); child components (`ToolBar.vue`, `RevenueTrend.vue`,
   etc.) are pure props-in/events-out, with no store access of their own. 
@@ -106,6 +108,7 @@ fields, sortable table headers, chart SVGs, links) gets a consistent, visible
 `focus-visible` outline instead of relying on inconsistent browser defaults;
 field labels are recolored to meet WCAG AA contrast; nav/notification lists
 carry `aria-label`/`aria-busy`/`role` attributes for screen readers.
+The entire app is navigable via keyboard alone.
 
 * The 2 Accessibility issues are know Vuetify issues : https://github.com/vuetifyjs/vuetify/issues/22522
 
