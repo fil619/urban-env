@@ -67,7 +67,6 @@ src/
 
 ## Architecture Decisions
 
-Ordered roughly by impact:
 - **Container / Presentational split.** Pages own all logic (store calls,
   filter/pagination state); child components (`ToolBar.vue`, `RevenueTrend.vue`,
   etc.) are pure props-in/events-out, with no store access of their own. 
