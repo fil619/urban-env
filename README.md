@@ -126,3 +126,25 @@ improve once the app talks to a real backend instead of mocks.
 - **Pre-commit hooks.** Husky + lint-staged to run lint/format/type-check on
   staged files before a commit lands, instead of relying on CI or review to
   catch it.
+
+### The records API may return up to 100,000 records. Explain in the README how you would handle this scenario in production.
+
+First, check why the API is returning 100,000 records, and whether anyone actually needs all of them at once.
+So the right approach depends on what the data is for.
+
+## If it's a table or list view
+
+* Don't pull everything.
+* Use server-side pagination, filtering, sorting, and search so the user narrows the data before it comes down the wire.
+* Request one page at a time, and load more with infinite scroll or lazy loading as the user scrolls.
+
+## If a large dataset really has to reach the front end
+
+* Store it in a shallowRef. Big read-only lists don't need per-row reactivity, so this skips the cost of making every object reactive.
+  Reassign the whole array to trigger an update.
+* Shape the data once, when it lands in the store, not per-row inside the table while it renders. The table should just show values.
+* Give each row a key (:key="item.id") so Vue can track each row correctly as the list changes.
+* Show skeleton loaders while data loads, so the user sees structure instead of a blank screen.
+* Use virtualization (vue-virtual-scroller) if a large list must be rendered at once, so only the rows visible in the viewport are in the DOM. 
+  Render cost stays flat whether it's 1k or 100k rows.
+* Debounce the search/filter inputs so you're not firing a request on every keystroke against a large dataset.
