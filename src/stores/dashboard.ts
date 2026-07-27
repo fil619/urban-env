@@ -77,6 +77,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
   const recentRecords = ref<RecordItem[]>([]);
   const loaded = ref(false);
   const error = ref<string | null>(null);
+  const filtering = ref(false);
   let fetchPromise: Promise<void> | null = null;
 
   const fetchDashboardData = (): Promise<void> => {
@@ -166,6 +167,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
     }
 
     error.value = null;
+    filtering.value = true;
 
     try {
       const [
@@ -215,6 +217,8 @@ export const useDashboardStore = defineStore("dashboard", () => {
     } catch (err) {
       error.value =
         err instanceof Error ? err.message : "Failed to load records";
+    } finally {
+      filtering.value = false;
     }
   };
 
@@ -235,6 +239,7 @@ export const useDashboardStore = defineStore("dashboard", () => {
     recentRecords,
     loaded,
     error,
+    filtering,
     fetchDashboardData,
     fetchFilteredData,
   };
