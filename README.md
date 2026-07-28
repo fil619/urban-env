@@ -18,7 +18,7 @@ sortable, server-paginated records table, backed by a mocked REST API.
 
 ## Setup Instructions
 
-Requires Node.js 20+ and npm.
+Requires Node.js ^22.22.2 or ^24.15.0 and npm.
 
 ```bash
 # 1. Clone the repository
