@@ -62,5 +62,9 @@
   "overrides": {
     "brace-expansion": "^5.0.8",
     "js-beautify": "^2.0.3"
+  },
+  "allowScripts": {
+    "msw@2.15.0": true,
+    "@parcel/watcher@2.6.0": true
   }
 }
