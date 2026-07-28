@@ -1,8 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { mount } from "@vue/test-utils";
+import { nextTick } from "vue";
 import vuetify from "@/plugins/vuetify";
 import type { RecordItem } from "@/stores/dashboard";
 import RecentOrder from "@/views/dashboard/components/RecentOrder.vue";
+
+// Vuetify 4 derives display.mobile reactively from window.innerWidth instead of
+// exposing a patchable $vuetify.display global, so mobile state must be forced
+// via an actual resize.
+const setWindowWidth = (width: number) => {
+  Object.defineProperty(window, "innerWidth", {
+    writable: true,
+    configurable: true,
+    value: width,
+  });
+  window.dispatchEvent(new Event("resize"));
+};
 
 describe("RecentOrder", () => {
   it("renders the correct status label for completed, processing, and other statuses", () => {
@@ -47,7 +60,7 @@ describe("RecentOrder", () => {
     expect(text).toContain("Pending");
   });
 
-  it("renders records as cards instead of a table on mobile", () => {
+  it("renders records as cards instead of a table on mobile", async () => {
     const records: RecordItem[] = [
       {
         date: "01/01/2026",
@@ -59,17 +72,14 @@ describe("RecentOrder", () => {
       },
     ];
 
+    const originalWidth = window.innerWidth;
+    setWindowWidth(500);
+    await nextTick();
+
     const wrapper = mount(RecentOrder, {
       props: { records },
       global: {
-        plugins: [
-          vuetify,
-          {
-            install(app) {
-              app.config.globalProperties.$vuetify.display.mobile = true;
-            },
-          },
-        ],
+        plugins: [vuetify],
         stubs: { RouterLink: true },
       },
     });
@@ -79,5 +89,8 @@ describe("RecentOrder", () => {
     );
     expect(wrapper.findComponent({ name: "VTable" }).exists()).toBe(false);
     expect(wrapper.text()).toContain("Retail Banking");
+
+    setWindowWidth(originalWidth);
+    await nextTick();
   });
 });

@@ -8,6 +8,7 @@ beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+// JSDOM doesn't implement ResizeObserver or matchMedia, but Vuetify components use them.
 class ResizeObserverStub {
   observe() {}
   unobserve() {}

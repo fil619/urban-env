@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { mountWithPlugins } from "@/test/mountWithPlugins";
-import BarChartCard from "@/views/dashboard/components/BarChartCard.vue";
+// BarChartCard lives under components/shared, not views/dashboard/components.
+import BarChartCard from "@/components/shared/BarChartCard.vue";
 
 const apexchartStub = {
   name: "ApexchartStub",
