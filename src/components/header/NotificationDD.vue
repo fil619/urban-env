@@ -92,7 +92,9 @@ onMounted(() => {
           </v-btn>
         </div>
       </v-alert>
-      <div style="height: calc(100vh - 300px); max-height: 265px">
+      <div
+        style="max-height: min(calc(100vh - 300px), 265px); overflow-y: auto"
+      >
         <v-list
           class="py-0"
           lines="two"
@@ -123,11 +125,13 @@ onMounted(() => {
                   ></v-icon>
                 </v-avatar>
               </template>
-              <div class="d-inline-flex justify-space-between w-100">
+              <div class="d-flex align-center w-100">
                 <h6 class="text-subtitle-1 font-weight-regular mb-0">
                   {{ notification.title }}
                 </h6>
-                <span class="text-caption">{{ notification.time }}</span>
+                <span class="text-caption ms-auto pl-2">{{
+                  notification.time
+                }}</span>
               </div>
 
               <p class="text-caption text-medium-emphasis my-0">
@@ -139,6 +143,12 @@ onMounted(() => {
             ></v-divider>
           </template>
         </v-list>
+      </div>
+      <v-divider></v-divider>
+      <div class="pa-2 text-center">
+        <v-btn disabled color="primary" variant="text" to="/notifications"
+          >View All</v-btn
+        >
       </div>
     </v-sheet>
   </v-menu>

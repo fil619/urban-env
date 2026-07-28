@@ -20,6 +20,11 @@ const sidebarItem: MenuItem[] = [
     icon: "mdi-file-chart-outline",
     to: "/records",
   },
+  {
+    title: "Error 404",
+    icon: "mdi-alert-circle-outline",
+    to: "/error",
+  },
 ];
 </script>
 
